@@ -1,5 +1,10 @@
 package by.htp.library.entity;
 
-public class Book {
+import java.util.GregorianCalendar;
 
+public class Book {
+	private int id_book;
+	private String title;
+	private String author;
+	private GregorianCalendar dateOfissue;
 }

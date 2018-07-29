@@ -1,4 +1,4 @@
-package by.htp.library.dao.sql;
+package by.htp.library.dao.sql.util;
 
 import java.util.ResourceBundle;
 

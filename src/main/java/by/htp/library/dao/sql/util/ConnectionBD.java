@@ -1,8 +1,8 @@
-package by.htp.library.dao.sql;
+package by.htp.library.dao.sql.util;
 
-import static by.htp.library.dao.sql.MainSqlPropertyManager.getLogin;
-import static by.htp.library.dao.sql.MainSqlPropertyManager.getPass;
-import static by.htp.library.dao.sql.MainSqlPropertyManager.getUrl;
+import static by.htp.library.dao.sql.util.MainSqlPropertyManager.getLogin;
+import static by.htp.library.dao.sql.util.MainSqlPropertyManager.getPass;
+import static by.htp.library.dao.sql.util.MainSqlPropertyManager.getUrl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
