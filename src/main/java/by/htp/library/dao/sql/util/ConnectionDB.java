@@ -9,7 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class ConnectionBD {
+public class ConnectionDB {
 	private static PreparedStatement st;
 
 	static PreparedStatement conectionWithDB(String url) throws SQLException {

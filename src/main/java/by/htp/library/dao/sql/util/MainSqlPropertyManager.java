@@ -20,4 +20,8 @@ public class MainSqlPropertyManager {
 		return rb.getString("db.pass");
 
 	}
+
+//	public static String getLocator() {
+//		return "";
+//	}
 }

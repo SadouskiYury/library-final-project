@@ -1,6 +1,12 @@
 package by.htp.library.run;
 
-public class MainBD {
+import java.util.Scanner;
+
+import by.htp.library.dao.sql.LibrarianDaoImple;
+import by.htp.library.dao.sql.ReaderDaoImple;
+import by.htp.library.logic.Logic;
+
+public class MainDB {
 
 	public static void main(String[] args) {
 		/*
@@ -40,10 +46,12 @@ public class MainBD {
 		 * количество дней просрочки по возврату книги в библиотеку); отчёт о
 		 * прочитанных книгах (отчёт содержит информацию о названии книги, количестве
 		 * раз, когда данная книга выдавалась для чтения), отчет выводится в
-		 * отсортированном виде начиная с самой читаемой книги.
-		 *&&&  отчёт о сотрудниках, которые прочитали не менее 2-х и не более 8-ми книг за месяц.&&&&
+		 * отсортированном виде начиная с самой читаемой книги. &&& отчёт о сотрудниках,
+		 * которые прочитали не менее 2-х и не более 8-ми книг за месяц.&&&&
 		 * 
 		 */
+		Logic.startMenu();
+
 	}
 
 }
