@@ -3,8 +3,9 @@ package by.htp.library.entity;
 public class Reader {
 	private String name;
 	private String surname;
-	private int numberLibraryCard;
+	private String numberLibraryCard;
 	private String password;
+	private int id;
 	private int numberPhone;
 
 	public Reader() {
@@ -12,11 +13,12 @@ public class Reader {
 
 	}
 
-	public Reader(String name, String surname, int numberLibraryCard, String password, int numberPhone) {
+	public Reader(String name, String surname, String numberLibraryCard, String password, int id, int numberPhone) {
 		this.name = name;
 		this.surname = surname;
 		this.numberLibraryCard = numberLibraryCard;
 		this.password = password;
+		this.id = id;
 		this.numberPhone = numberPhone;
 	}
 
@@ -36,11 +38,11 @@ public class Reader {
 		this.surname = surname;
 	}
 
-	public int getNumberLibraryCard() {
+	public String getNumberLibraryCard() {
 		return numberLibraryCard;
 	}
 
-	public void setNumberLibraryCard(int numberLibraryCard) {
+	public void setNumberLibraryCard(String numberLibraryCard) {
 		this.numberLibraryCard = numberLibraryCard;
 	}
 
@@ -50,6 +52,14 @@ public class Reader {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getNumberPhone() {
@@ -64,8 +74,9 @@ public class Reader {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + numberLibraryCard;
+		result = prime * result + ((numberLibraryCard == null) ? 0 : numberLibraryCard.hashCode());
 		result = prime * result + numberPhone;
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
@@ -81,12 +92,17 @@ public class Reader {
 		if (getClass() != obj.getClass())
 			return false;
 		Reader other = (Reader) obj;
+		if (id != other.id)
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (numberLibraryCard != other.numberLibraryCard)
+		if (numberLibraryCard == null) {
+			if (other.numberLibraryCard != null)
+				return false;
+		} else if (!numberLibraryCard.equals(other.numberLibraryCard))
 			return false;
 		if (numberPhone != other.numberPhone)
 			return false;
@@ -105,8 +121,8 @@ public class Reader {
 
 	@Override
 	public String toString() {
-		return "Reader [name=" + name + ", surname=" + surname + ", numberLibraryCard=" + numberLibraryCard
-				+ ", password=" + password + ", numberPhone=" + numberPhone + "]";
+		return "Reader [id=" + id + " ,name=" + name + ", surname=" + surname + ", numberLibraryCard="
+				+ numberLibraryCard + ", password=" + password + ", numberPhone=" + numberPhone + "]";
 	}
 
 }

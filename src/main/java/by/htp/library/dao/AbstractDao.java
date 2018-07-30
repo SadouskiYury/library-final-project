@@ -7,12 +7,14 @@ import by.htp.library.entity.Reader;
 
 public abstract class AbstractDao implements Dao {
 
-	public Boolean login(int login, String pass) {
+	public Boolean login(String login, String pass) {
 		return null;
 	}
 
-	public List<Reader> listReaders() {
+	public List<Reader> listReaders()  {
+//		throw new NoSuchMethodException();
 		return null;
+
 	}
 
 	public int add(Object o) {

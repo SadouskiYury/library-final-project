@@ -20,13 +20,12 @@ public class ReaderDaoImple extends AbstractDao {
 	private static ResultSet rs;
 
 	@Override
-	public Boolean login(int login, String pass) {
+	public Boolean login(String login, String pass) {
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryLogin())) {
-			ps.setInt(1, login);
+			ps.setString(1, login);
 			ps.setString(2, pass);
-			System.out.println(ps.toString());
 			rs = ps.executeQuery();
-			rs.next();// ???почему юез него ошибка??
+			rs.next();
 			buildReader(rs);
 			System.out.println(reader.toString());
 			return true;
@@ -54,36 +53,42 @@ public class ReaderDaoImple extends AbstractDao {
 	}
 
 	public void showCatalouge(List<Book> list) {
+		System.out.printf("%-10s%-20s%-35s%n", "Book id", "Title ", "Author ");
+		System.out.println("----------------------------------------------------------------------------------");
 		for (Book l : list)
-			System.out.println("Book id: " + l.getId_book() + " ,title: " + l.getTitle() + ". Author: " + " "
-					+ l.getAuthor().getSurname());
+			System.out.printf("%-10d%-20s%-35s%n", l.getId_book(), l.getTitle(), l.getAuthor().getSurname());
+		System.out.println("----------------------------------------------------------------------------------");
 	}
 
 	private void buildReader(ResultSet rs) throws SQLException {
 		reader.setName(rs.getString("name").trim());
-		reader.setNumberLibraryCard(rs.getInt("id_reader"));
+		reader.setId(rs.getInt("id_reader"));
 		reader.setSurname(rs.getString("surname").trim());
 		reader.setPassword(rs.getString("password").trim());
+		reader.setNumberPhone(rs.getInt("number_phone"));
+		reader.setNumberLibraryCard(rs.getString("login"));
 
 	}
 
-	public static void showDetailsBook(int id_book) {
-
+	public void showDetailsBook(int id_book) {
+		Book book = new Book();
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getDetailBook())) {
+			ps.setInt(1, id_book);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			book = buildBook(rs);
+			System.out.println(
+					"Id book: " + book.getId_book() + "Title: " + book.getTitle() + "Type: " + book.getTitle());
+			System.out.println(book.getAuthor().toString());
+			System.out.println(book.getAuthor().toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-
-	public static Reader getReader() {
-		return reader;
-	}
+	
 
 	private Book buildBook(ResultSet rs) throws SQLException {
 		Book book = new Book();
-		GregorianCalendar dateOfmade = new GregorianCalendar();
-		if (rs.getDate("date") == (null))
-			book.setDateOfmade(null);
-		else {
-			dateOfmade.setTime(rs.getDate("date"));
-			book.setDateOfmade(dateOfmade);
-		}
 		book.setTitle(rs.getString("title").trim());
 		book.setId_book(rs.getInt("id"));
 		book.setAuthor(buildAuthor(rs));
@@ -106,6 +111,7 @@ public class ReaderDaoImple extends AbstractDao {
 
 	private int cheсkAuthor(Author author) throws SQLException {
 		Date birthday = new Date(author.getBirthDate().getTimeInMillis());
+		GregorianCalendar dateOfmade = new GregorianCalendar();
 		PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryAuthor());
 		ps.setString(1, author.getName());
 		ps.setString(2, author.getMidlenme());
@@ -118,6 +124,15 @@ public class ReaderDaoImple extends AbstractDao {
 		int result = ps.executeUpdate();
 
 		return result;
+	}
+
+	public Reader getReader() {
+		return reader;
+	}
+
+	@Override
+	public String checkReader(String login, String pass) {
+		return null;
 	}
 
 }

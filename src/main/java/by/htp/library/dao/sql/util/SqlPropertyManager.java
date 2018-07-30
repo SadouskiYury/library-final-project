@@ -32,4 +32,8 @@ public class SqlPropertyManager {
 	public static String getQueryBook() {
 		return rb.getString("db.query.show.book");
 	}
+
+	public static String getDetailBook() {
+		return rb.getString("db.query.show.datails.book");
+	}
 }

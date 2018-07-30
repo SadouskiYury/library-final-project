@@ -14,6 +14,16 @@ public class LibrarianDaoImple extends AbstractDao {
 		return null;
 	}
 
+	@Override
+	public List<Reader> listReaders() {
+		return null;
+	}
+
+	@Override
+	public String checkReader(String login, String pass) {
+		return null;
+	}
+
 	
 
 }

@@ -1,6 +1,8 @@
 package by.htp.library.logic;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import by.htp.library.dao.sql.LibrarianDaoImple;
 import by.htp.library.dao.sql.ReaderDaoImple;
@@ -43,7 +45,7 @@ public class Logic {
 	private static Boolean menuReader(Scanner sc) {
 		while (true) {
 			System.out.println("Please, Enter your login");
-			int login = sc.nextInt();
+			String login = sc.next();
 			System.out.println("Please, Enter your password");
 			String pass = sc.next();
 			if (reader.login(login, pass)) {
@@ -60,27 +62,31 @@ public class Logic {
 		}
 		return false;
 
-	};
+	}
 
 	private static void showFunctionReader(Scanner sc) {
-		System.out.println("Menu");
-		System.out.println("[0].Exit");
-		System.out.println("[1].Show the catalog of books");
-		System.out.println("[2].Show deatails about book");
-		sleep(1000);
+
 		label: while (true) {
+			System.out.println("Menu");
+			System.out.println("[0].Exit");
+			System.out.println("[1].Show the catalog of books");
+			System.out.println("[2].Show deatails about book");
+			sleep(1000);
 			switch (sc.next()) {
 			case "0":
 				break label;
 			case "1":
 				reader.showCatalouge(reader.buildCatalogue());
-				break label;
+				exitMenu(sc);
+				break;
 			case "2": {
 				System.out.println("Enter id book");
-				int id = sc.nextInt();
+				int id = checkIdBoock(sc);
+				sleep(1000);
 				reader.showDetailsBook(id);
+				exitMenu(sc);
+				break;
 			}
-				break label;
 			default:
 				System.out.println("You entered incorrect number, please be attentive repeat Enter");
 				System.out.println("Number must be [0-2]");
@@ -96,6 +102,19 @@ public class Logic {
 
 	}
 
+	private static void exitMenu(Scanner sc) {
+		while (true) {
+			System.out.println("Are you wish to continue(Y/N)?");
+			String result = sc.next();
+			if ("Y".equalsIgnoreCase(result)) {
+				break;
+			} else if ("N".equalsIgnoreCase(result)) {
+				System.exit(0);
+			} else
+				System.out.println("You entered incorrect date, please be attentive repeat Enter");
+		}
+	}
+
 	private static void sleep(int time) {
 		try {
 			Thread.sleep(time);
@@ -103,7 +122,21 @@ public class Logic {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+	private static int checkIdBoock(Scanner sc) {
+		String s = new String();
+		while (true) {
+			s = sc.next();
+			Pattern p = Pattern.compile("\\D");
+			Matcher m = p.matcher(s);
+			if (m.find())
+				System.out.println("You entered wrong id Book!,it must be number!");
+			else {
+				int id = Integer.parseInt(s.trim());
+				return id;
+			}
+
+		}
+	}
 
 }
