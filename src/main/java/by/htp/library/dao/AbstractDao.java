@@ -3,12 +3,15 @@ package by.htp.library.dao;
 import java.util.List;
 
 import by.htp.library.entity.Book;
+import by.htp.library.entity.Reader;
 
 public abstract class AbstractDao implements Dao {
 
-	public abstract Boolean login(String login, String pass);
+	public Boolean login(int login, String pass) {
+		return null;
+	}
 
-	public List<Object> list() {
+	public List<Reader> listReaders() {
 		return null;
 	}
 
@@ -16,9 +19,7 @@ public abstract class AbstractDao implements Dao {
 		return 0;
 	}
 
-	public List<Book> showCatalogue() {
-		return null;
-	}
+	public abstract List<Book> buildCatalogue();
 
 	public boolean returnBook(int id_book) {
 		return false;

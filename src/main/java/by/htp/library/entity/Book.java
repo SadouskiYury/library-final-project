@@ -1,11 +1,12 @@
 package by.htp.library.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 public class Book {
 	private int id_book;
 	private String title;
-	private String author;
+	private Author author;
 	private GregorianCalendar dateOfmade;
 	private String preface;
 	private String type;
@@ -15,7 +16,7 @@ public class Book {
 
 	}
 
-	public Book(int id_book, String title, String author, GregorianCalendar date, String preface, String type) {
+	public Book(int id_book, String title, Author author, GregorianCalendar date, String preface, String type) {
 		this.id_book = id_book;
 		this.title = title;
 		this.author = author;
@@ -40,11 +41,11 @@ public class Book {
 		this.title = title;
 	}
 
-	public String getAuthor() {
+	public Author getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(String author) {
+	public void setAuthor(Author author) {
 		this.author = author;
 	}
 
@@ -126,8 +127,9 @@ public class Book {
 
 	@Override
 	public String toString() {
-		return "Book [id_book=" + id_book + ", title=" + title + ", author=" + author + ", dateOfmade=" + dateOfmade
-				+ ", preface=" + preface + ", type=" + type + "]";
+		return "Book [id_book=" + id_book + ", title=" + title + ", author=" + author + ", dateOfmade="
+				+ new SimpleDateFormat("yyyy-MM-dd").format(dateOfmade.getTime()) + ", preface=" + preface + ", type="
+				+ type + "]";
 	}
 
 }

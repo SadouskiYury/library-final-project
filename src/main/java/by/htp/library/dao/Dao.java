@@ -7,7 +7,7 @@ import by.htp.library.entity.Reader;
 
 public interface Dao {
 	// reader or librarian
-	Boolean login(String login, String pass);
+	Boolean login(int login, String pass);
 
 	// будет содержать лист сотрудников либо кталог книг
 	List<Reader> listReaders();
@@ -15,7 +15,7 @@ public interface Dao {
 	// add reader or book
 	int add(Object o);
 
-	List<Book> showCatalogue();
+	List<Book> buildCatalogue();
 
 	boolean returnBook(int id_book);
 }

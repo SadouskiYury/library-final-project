@@ -2,7 +2,7 @@ package by.htp.library.dao.sql.util;
 
 import java.util.ResourceBundle;
 
-public class MainSqlPropertyManager {
+public class SqlPropertyManager {
 	private static final ResourceBundle rb;
 	static {
 		rb = ResourceBundle.getBundle("db_config");
@@ -21,7 +21,15 @@ public class MainSqlPropertyManager {
 
 	}
 
-//	public static String getLocator() {
-//		return "";
-//	}
+	public static String getQueryLogin() {
+		return rb.getString("db.query.login");
+	}
+
+	public static String getQueryAuthor() {
+		return rb.getString("db.query.author");
+	}
+
+	public static String getQueryBook() {
+		return rb.getString("db.query.show.book");
+	}
 }
