@@ -36,4 +36,7 @@ public class SqlPropertyManager {
 	public static String getDetailBook() {
 		return rb.getString("db.query.show.datails.book");
 	}
+	public static String getQueryGotBook() {
+		return rb.getString("db.query.take_date.for.reader");
+	}
 }

@@ -51,6 +51,7 @@ public class Logic {
 			if (reader.login(login, pass)) {
 				System.out.println(
 						"Welcome to Library! " + reader.getReader().getName() + " " + reader.getReader().getSurname());
+				reader.checkReader(login, pass);
 				return true;
 			} else {
 				System.out.println("You entered incorrect login or password, please be attentive repeat Enter");

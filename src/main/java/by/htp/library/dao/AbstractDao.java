@@ -17,13 +17,18 @@ public abstract class AbstractDao implements Dao {
 
 	}
 
+	@Override
+	public Boolean checkReader(String login, String pass) {
+		return null;
+	}
+
 	public int add(Object o) {
 		return 0;
 	}
 
 	public abstract List<Book> buildCatalogue();
 
-	public boolean returnBook(int id_book) {
+	public Boolean returnBook(int id_book) {
 		return false;
 	}
 

@@ -1,10 +1,11 @@
 package by.htp.library.dao.sql;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import by.htp.library.dao.sql.util.ConnectionDB;
 import by.htp.library.dao.sql.util.SqlPropertyManager;
 import by.htp.library.entity.Author;
 import by.htp.library.entity.Book;
+import by.htp.library.entity.EnumNameColumn;
 import by.htp.library.entity.Reader;
 
 public class ReaderDaoImple extends AbstractDao {
@@ -60,14 +62,25 @@ public class ReaderDaoImple extends AbstractDao {
 		System.out.println("----------------------------------------------------------------------------------");
 	}
 
-	private void buildReader(ResultSet rs) throws SQLException {
-		reader.setName(rs.getString("name").trim());
-		reader.setId(rs.getInt("id_reader"));
-		reader.setSurname(rs.getString("surname").trim());
-		reader.setPassword(rs.getString("password").trim());
-		reader.setNumberPhone(rs.getInt("number_phone"));
-		reader.setNumberLibraryCard(rs.getString("login"));
-
+	@Override
+	public Boolean checkReader(String login, String pass) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
+			ps.setString(1, login);
+			ps.setString(2, pass);
+			rs = ps.executeQuery();
+			rs.next();
+			GregorianCalendar takeDate = new GregorianCalendar();
+			GregorianCalendar currentDate = new GregorianCalendar();
+			takeDate.setTime(rs.getDate("take_date"));
+			takeDate.add(Calendar.DAY_OF_MONTH, 30);
+			if (takeDate.after(currentDate))
+				System.out.println("You have a book, which have to return untill  "
+						+ new SimpleDateFormat("yyyy-MM-dd").format(takeDate.getTime()));
+			return true;
+		} catch (SQLException e) {
+			System.err.println("You have not read any books");
+			return false;
+		}
 	}
 
 	public void showDetailsBook(int id_book) {
@@ -78,61 +91,55 @@ public class ReaderDaoImple extends AbstractDao {
 			rs.next();
 			book = buildBook(rs);
 			System.out.println(
-					"Id book: " + book.getId_book() + "Title: " + book.getTitle() + "Type: " + book.getTitle());
+					"Id book: " + book.getId_book() + ", Title: " + book.getTitle() + ", Type: " + book.getType());
 			System.out.println(book.getAuthor().toString());
-			System.out.println(book.getAuthor().toString());
+			System.out.println(
+					"------------------------------------------------------------------------------------------------------");
+			String[] preface = book.getPreface().split("[.]");
+			for (String s : preface) {
+				System.out.println(s + ".");
+			}
+			System.out.println(
+					"-------------------------------------------------------------------------------------------------------");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-
-	private Book buildBook(ResultSet rs) throws SQLException {
-		Book book = new Book();
-		book.setTitle(rs.getString("title").trim());
-		book.setId_book(rs.getInt("id"));
-		book.setAuthor(buildAuthor(rs));
-		book.setType(rs.getString("type"));
-		book.setPreface(rs.getString("preface"));
-		return book;
-	}
-
-	private Author buildAuthor(ResultSet rs) throws SQLException {
-		Author author = new Author();
-		GregorianCalendar birthday = new GregorianCalendar();
-		birthday.setTime(rs.getDate("birthday"));
-		author.setName(rs.getString("name").trim());
-		author.setMidlenme(rs.getString("midlename").trim());
-		author.setSurname(rs.getString("surname").trim());
-		author.setBirthDate(birthday);
-		author.setId(rs.getInt("author.id"));
-		return author;
-	}
-
-	private int cheсkAuthor(Author author) throws SQLException {
-		Date birthday = new Date(author.getBirthDate().getTimeInMillis());
-		GregorianCalendar dateOfmade = new GregorianCalendar();
-		PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryAuthor());
-		ps.setString(1, author.getName());
-		ps.setString(2, author.getMidlenme());
-		ps.setString(3, author.getSurname());
-		ps.setDate(4, birthday);
-		ps.setString(5, author.getName());
-		ps.setString(6, author.getMidlenme());
-		ps.setString(7, author.getSurname());
-		ps.setDate(8, birthday);
-		int result = ps.executeUpdate();
-
-		return result;
 	}
 
 	public Reader getReader() {
 		return reader;
 	}
 
-	@Override
-	public String checkReader(String login, String pass) {
-		return null;
+	private Book buildBook(ResultSet rs) throws SQLException {
+		Book book = new Book();
+		book.setTitle(rs.getString(EnumNameColumn.BOOK_TITLE.getValue().trim()));
+		book.setId_book(rs.getInt(EnumNameColumn.BOOK_ID.getValue()));
+		book.setAuthor(buildAuthor(rs));
+		book.setType(rs.getString(EnumNameColumn.BOOK_TYPE.getValue()));
+		book.setPreface(rs.getString(EnumNameColumn.BOOK_PREFACE.getValue()));
+		return book;
+	}
+
+	private void buildReader(ResultSet rs) throws SQLException {
+		reader.setName(rs.getString(EnumNameColumn.READER_NAME.getValue()).trim());
+		reader.setId(rs.getInt(EnumNameColumn.READER_ID.getValue()));
+		reader.setSurname(rs.getString(EnumNameColumn.READER_SURNAME.getValue().trim()));
+		reader.setPassword(rs.getString(EnumNameColumn.READER_PASSWORD.getValue().trim()));
+		reader.setNumberPhone(rs.getInt(EnumNameColumn.READER_NUMBER_PHONE.getValue()));
+		reader.setNumberLibraryCard(rs.getString(EnumNameColumn.READER_LOGIN.getValue()));
+
+	}
+
+	private Author buildAuthor(ResultSet rs) throws SQLException {
+		Author author = new Author();
+		GregorianCalendar birthday = new GregorianCalendar();
+		birthday.setTime(rs.getDate(EnumNameColumn.AUTHOR_BIRTHDAY.getValue()));
+		author.setName(rs.getString(EnumNameColumn.AUTHOR_NAME.getValue().trim()));
+		author.setMidlenme(rs.getString(EnumNameColumn.AUTHOR_MIDLENAME.getValue().trim()));
+		author.setSurname(rs.getString(EnumNameColumn.AUTHOR_SURNAME.getValue().trim()));
+		author.setBirthDate(birthday);
+		author.setId(rs.getInt(EnumNameColumn.AUTHOR_ID.getValue()));
+		return author;
 	}
 
 }

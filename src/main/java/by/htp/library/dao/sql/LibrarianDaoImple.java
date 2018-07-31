@@ -4,10 +4,18 @@ import java.util.List;
 
 import by.htp.library.dao.AbstractDao;
 import by.htp.library.entity.Book;
-import by.htp.library.entity.EnumLibrarian;
-import by.htp.library.entity.Reader;
 
 public class LibrarianDaoImple extends AbstractDao {
+
+	@Override
+	public Boolean login(String login, String pass) {
+		return super.login(login, pass);
+	}
+
+	@Override
+	public int add(Object o) {
+		return super.add(o);
+	}
 
 	@Override
 	public List<Book> buildCatalogue() {
@@ -15,15 +23,17 @@ public class LibrarianDaoImple extends AbstractDao {
 	}
 
 	@Override
-	public List<Reader> listReaders() {
-		return null;
+	public void showCatalouge(List<Book> list) {
 	}
 
 	@Override
-	public String checkReader(String login, String pass) {
-		return null;
+	public Boolean checkReader(String login, String pass) {
+		return super.checkReader(login, pass);
 	}
 
-	
+	@Override
+	public Boolean returnBook(int id_book) {
+		return super.returnBook(id_book);
+	}
 
 }

@@ -1,12 +1,5 @@
 package by.htp.library.run;
 
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-
-import by.htp.library.dao.sql.LibrarianDaoImple;
-import by.htp.library.dao.sql.ReaderDaoImple;
 import by.htp.library.logic.Logic;
 
 public class MainDB {
@@ -41,7 +34,7 @@ public class MainDB {
 		 * книги, который в данный момент находится на руках у другого читателя,
 		 * приложение не должно позволить выдавать книгу в случае, если у читателя на
 		 * руках уже находится 3 книги, либо если есть задолженность по возврату книг);
-		 * возможность зафиксировать факт возврата читателем книги в библиотеку;????
+		 * возможность зафиксировать факт возврата читателем книги в библиотеку;
 		 * 
 		 * Реализуйте возможность получения следующих отчётов: отчёт о читателях, у
 		 * которых имеется задолженность по возврату книг (отчет содержит следующую
@@ -54,7 +47,7 @@ public class MainDB {
 		 * 
 		 */
 		Logic.startMenu();
-		
+
 	}
 
 }

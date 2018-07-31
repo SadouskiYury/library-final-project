@@ -3,15 +3,15 @@ package by.htp.library.entity;
 public class Librarian {
 	private String name;
 	private String surname;
-	private EnumLibrarian loggin;
-	private EnumLibrarian password;
+	private EnumNameColumn loggin;
+	private EnumNameColumn password;
 
 	public Librarian() {
 		super();
 
 	}
 
-	public Librarian(String name, String surname, EnumLibrarian loggin, EnumLibrarian password) {
+	public Librarian(String name, String surname, EnumNameColumn loggin, EnumNameColumn password) {
 		this.name = name;
 		this.surname = surname;
 		this.loggin = loggin;
@@ -34,19 +34,19 @@ public class Librarian {
 		this.surname = surname;
 	}
 
-	public EnumLibrarian getLoggin() {
+	public EnumNameColumn getLoggin() {
 		return loggin;
 	}
 
-	public void setLoggin(EnumLibrarian loggin) {
+	public void setLoggin(EnumNameColumn loggin) {
 		this.loggin = loggin;
 	}
 
-	public EnumLibrarian getPassword() {
+	public EnumNameColumn getPassword() {
 		return password;
 	}
 
-	public void setPassword(EnumLibrarian password) {
+	public void setPassword(EnumNameColumn password) {
 		this.password = password;
 	}
 

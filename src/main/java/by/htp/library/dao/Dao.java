@@ -9,15 +9,13 @@ public interface Dao {
 	// reader or librarian
 	Boolean login(String login, String pass);
 
-	// будет содержать лист сотрудников либо кталог книг
-	List<Reader> listReaders();
-
-	// add reader or book
-	int add(Object o);
+	public int add(Object o);
 
 	List<Book> buildCatalogue();
 
-	boolean returnBook(int id_book);
+	void showCatalouge(List<Book> list);
 
-	String checkReader(String login,String pass);
+	Boolean returnBook(int id_book);
+
+	Boolean checkReader(String login, String pass);
 }
