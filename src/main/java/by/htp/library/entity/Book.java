@@ -1,8 +1,5 @@
 package by.htp.library.entity;
 
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-
 public class Book {
 	private int id_book;
 	private String title;

@@ -8,13 +8,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import by.htp.library.dao.AbstractDao;
 import by.htp.library.dao.sql.util.ConnectionDB;
+import by.htp.library.dao.sql.util.EnumNameColumn;
 import by.htp.library.dao.sql.util.SqlPropertyManager;
 import by.htp.library.entity.Author;
 import by.htp.library.entity.Book;
-import by.htp.library.entity.EnumNameColumn;
 import by.htp.library.entity.Reader;
 
 public class ReaderDaoImple extends AbstractDao {
@@ -54,6 +56,7 @@ public class ReaderDaoImple extends AbstractDao {
 
 	}
 
+	@Override
 	public void showCatalouge(List<Book> list) {
 		System.out.printf("%-10s%-20s%-35s%n", "Book id", "Title ", "Author ");
 		System.out.println("----------------------------------------------------------------------------------");
@@ -95,10 +98,13 @@ public class ReaderDaoImple extends AbstractDao {
 			System.out.println(book.getAuthor().toString());
 			System.out.println(
 					"------------------------------------------------------------------------------------------------------");
-			String[] preface = book.getPreface().split("[.]");
-			for (String s : preface) {
-				System.out.println(s + ".");
-			}
+			String text = book.getPreface();
+			Pattern p = Pattern.compile("[.!?]");
+			Matcher m = p.matcher(text);
+			StringBuffer sb = new StringBuffer();
+			while (m.find())
+				m.appendReplacement(sb, "\n");
+			System.out.print(sb.toString());
 			System.out.println(
 					"-------------------------------------------------------------------------------------------------------");
 		} catch (SQLException e) {
@@ -122,7 +128,6 @@ public class ReaderDaoImple extends AbstractDao {
 
 	private void buildReader(ResultSet rs) throws SQLException {
 		reader.setName(rs.getString(EnumNameColumn.READER_NAME.getValue()).trim());
-		reader.setId(rs.getInt(EnumNameColumn.READER_ID.getValue()));
 		reader.setSurname(rs.getString(EnumNameColumn.READER_SURNAME.getValue().trim()));
 		reader.setPassword(rs.getString(EnumNameColumn.READER_PASSWORD.getValue().trim()));
 		reader.setNumberPhone(rs.getInt(EnumNameColumn.READER_NUMBER_PHONE.getValue()));

@@ -5,20 +5,17 @@ public class Reader {
 	private String surname;
 	private String numberLibraryCard;
 	private String password;
-	private int id;
 	private int numberPhone;
 
 	public Reader() {
 		super();
-
 	}
 
-	public Reader(String name, String surname, String numberLibraryCard, String password, int id, int numberPhone) {
+	public Reader(String name, String surname, String numberLibraryCard, String password, int numberPhone) {
 		this.name = name;
 		this.surname = surname;
 		this.numberLibraryCard = numberLibraryCard;
 		this.password = password;
-		this.id = id;
 		this.numberPhone = numberPhone;
 	}
 
@@ -54,14 +51,6 @@ public class Reader {
 		this.password = password;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public int getNumberPhone() {
 		return numberPhone;
 	}
@@ -74,7 +63,6 @@ public class Reader {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((numberLibraryCard == null) ? 0 : numberLibraryCard.hashCode());
 		result = prime * result + numberPhone;
@@ -92,8 +80,6 @@ public class Reader {
 		if (getClass() != obj.getClass())
 			return false;
 		Reader other = (Reader) obj;
-		if (id != other.id)
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -121,8 +107,8 @@ public class Reader {
 
 	@Override
 	public String toString() {
-		return "Reader [id=" + id + " ,name=" + name + ", surname=" + surname + ", numberLibraryCard="
-				+ numberLibraryCard + ", password=" + password + ", numberPhone=" + numberPhone + "]";
+		return "Reader [name=" + name + ", surname=" + surname + ", numberLibraryCard=" + numberLibraryCard
+				+ ", password=" + password + ", numberPhone=" + numberPhone + "]";
 	}
 
 }

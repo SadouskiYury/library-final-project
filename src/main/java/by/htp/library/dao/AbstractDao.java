@@ -7,29 +7,31 @@ import by.htp.library.entity.Reader;
 
 public abstract class AbstractDao implements Dao {
 
-	public Boolean login(String login, String pass) {
-		return null;
-	}
+	@Override
+	public abstract Boolean login(String login, String pass);
 
-	public List<Reader> listReaders()  {
-//		throw new NoSuchMethodException();
-		return null;
+	@Override
+	public abstract List<Book> buildCatalogue();
 
+	@Override
+	public abstract void showCatalouge(List<Book> list);
+
+	@Override
+	public abstract Boolean checkReader(String login, String pass);
+
+	@Override
+	public Boolean returnBook(int id_book) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Boolean checkReader(String login, String pass) {
-		return null;
+	public Boolean add(Object o) {
+		throw new UnsupportedOperationException();
 	}
 
-	public int add(Object o) {
-		return 0;
-	}
-
-	public abstract List<Book> buildCatalogue();
-
-	public Boolean returnBook(int id_book) {
-		return false;
+	@Override
+	public void showDetailsBook(int id_book) {
+		throw new UnsupportedOperationException();
 	}
 
 }

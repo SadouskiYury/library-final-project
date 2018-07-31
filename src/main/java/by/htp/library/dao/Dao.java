@@ -6,10 +6,9 @@ import by.htp.library.entity.Book;
 import by.htp.library.entity.Reader;
 
 public interface Dao {
-	// reader or librarian
 	Boolean login(String login, String pass);
 
-	public int add(Object o);
+	Boolean add(Object o);
 
 	List<Book> buildCatalogue();
 
@@ -18,4 +17,6 @@ public interface Dao {
 	Boolean returnBook(int id_book);
 
 	Boolean checkReader(String login, String pass);
+
+	void showDetailsBook(int id_book);
 }
