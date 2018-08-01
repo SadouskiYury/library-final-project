@@ -1,5 +1,9 @@
 package by.htp.library.entity;
 
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Reader {
 	private String name;
 	private String surname;
@@ -17,6 +21,33 @@ public class Reader {
 		this.numberLibraryCard = numberLibraryCard;
 		this.password = password;
 		this.numberPhone = numberPhone;
+	}
+
+	public Reader createReader(Scanner sc) {
+		Reader reader = new Reader();
+		System.out.println("Enter login:");
+		reader.setNumberLibraryCard(sc.next());
+		System.out.println("Enter password");
+		reader.setPassword(validationPassword(sc));
+		System.out.println("Enter name");
+		reader.setName(sc.next());
+		System.out.println("Enter surname");
+		reader.setSurname(sc.next());
+		System.out.println("Enter numberPhone");
+		reader.setNumberPhone(sc.nextInt());
+		return reader;
+	}
+
+	private String validationPassword(Scanner sc) {
+		while (true) {
+			String s = sc.next();
+			Pattern p = Pattern.compile("[0-9]");
+			Matcher m = p.matcher(s);
+			if (s.length() > 6 && m.find())
+				return s;
+			System.out.println("The password must contain at least 6 characters and one digit!");
+		}
+
 	}
 
 	public String getName() {

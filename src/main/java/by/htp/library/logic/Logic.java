@@ -1,15 +1,12 @@
 package by.htp.library.logic;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import by.htp.library.dao.sql.LibrarianDaoImple;
 import by.htp.library.dao.sql.ReaderDaoImple;
+import by.htp.library.dao.sql.ReportDaoImple;
 import by.htp.library.entity.Author;
 import by.htp.library.entity.Book;
 import by.htp.library.entity.Librarian;
@@ -25,10 +22,7 @@ public class Logic {
 
 	public static void startMenu() {
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Select user");
-		System.out.println("[0].Exit");
-		System.out.println("[1].Reader");
-		System.out.println("[2].Librarian");
+		showMainMenu();
 		sleep(500);
 		label: while (true) {
 			switch (sc.next()) {
@@ -44,12 +38,23 @@ public class Logic {
 				sleep(500);
 				showFunctionLibrarian(sc);
 				break label;
+			case "3":
+				menuReport(sc);
+				break label;
 			default:
 				System.out.println("You entered incorrect number, please be attentive repeat Enter");
-				System.out.println("Number must be [0-2]");
+				System.out.println("Number must be [0-3]");
 			}
 		}
 		sc.close();
+	}
+
+	private static void showMainMenu() {
+		System.out.println("Select user");
+		System.out.println("[0].Exit");
+		System.out.println("[1].Reader");
+		System.out.println("[2].Librarian");
+		System.out.println("[3].Reports");
 	}
 
 	private static Boolean menuReader(Scanner sc) {
@@ -65,24 +70,18 @@ public class Logic {
 				return true;
 			} else {
 				System.out.println("You entered incorrect login or password, please be attentive repeat Enter");
-				System.out.println("If you wish exit, enter [0]");
-				System.out.println("If you would like continue, enter other symbol");
-				if (sc.next().equals("0"))
-					break;
+				exitMenu(sc);
 			}
 		}
-		return false;
-
 	}
 
 	private static void showFunctionReader(Scanner sc) {
-
 		label: while (true) {
 			System.out.println("Menu");
 			System.out.println("[0].Exit");
 			System.out.println("[1].Show the catalog of books");
 			System.out.println("[2].Show deatails about book");
-			sleep(1000);
+			sleep(500);
 			switch (sc.next()) {
 			case "0":
 				break label;
@@ -91,9 +90,8 @@ public class Logic {
 				exitMenu(sc);
 				break;
 			case "2": {
-				System.out.println("Enter id book");
 				int id = checkIdBoock(sc);
-				sleep(1000);
+				sleep(500);
 				readerDao.showDetailsBook(id);
 				exitMenu(sc);
 				break;
@@ -106,21 +104,24 @@ public class Logic {
 	}
 
 	private static void showFunctionLibrarian(Scanner sc) {
-
 		label: while (true) {
 			showBoxLibrarian();
 			switch (sc.next()) {
 			case "0":
 				break label;
 			case "1":
-				librarianDao.add(createReader(sc));
+				Reader reader = new Reader();
+				librarianDao.add(reader.createReader(sc));
 				exitMenu(sc);
 				break;
 			case "2":
-				librarianDao.add(createBook(sc));
+				Author author = new Author();
+				Book book = new Book();
+				librarianDao.add(book.createBook(sc, author));
 				exitMenu(sc);
 				break;
 			case "3":
+				librarianDao.returnBook(checkIdBoock(sc));
 				exitMenu(sc);
 				break;
 			case "4":
@@ -131,7 +132,6 @@ public class Logic {
 				librarianDao.showCatalouge(librarianDao.buildCatalogue());
 				exitMenu(sc);
 				break;
-
 			default:
 				System.out.println("You entered incorrect number, please be attentive repeat Enter");
 				System.out.println("Number must be [0-5]");
@@ -173,70 +173,40 @@ public class Logic {
 				return true;
 			} else {
 				System.out.println("You entered incorrect login or password, please be attentive repeat Enter");
-				System.out.println("If you wish exit, enter [0]");
-				System.out.println("If you would like continue, enter other symbol");
-				if (sc.next().equals("0"))
-					break;
+				exitMenu(sc);
 			}
 		}
-		return false;
-
 	}
 
-	private static void menuReport() {
-
-	}
-
-	private static Reader createReader(Scanner sc) {
-		Reader reader = new Reader();
-		System.out.println("Enter login:");
-		reader.setNumberLibraryCard(sc.next());
-		System.out.println("Enter password");
-		reader.setPassword(validationPassword(sc));
-		System.out.println("Enter name");
-		reader.setName(sc.next());
-		System.out.println("Enter surname");
-		reader.setSurname(sc.next());
-		System.out.println("Enter numberPhone");
-		reader.setNumberPhone(sc.nextInt());
-		return reader;
-	}
-
-	private static Book createBook(Scanner sc) {
-		Book book = new Book();
-		System.out.println("Enter book's tile:");
-		book.setTitle(sc.next());
-		System.out.println("Enter book's type:");
-		book.setType(sc.next());
-		System.out.println("Enter book's preface:");
-		book.setPreface(sc.next() + sc.nextLine());
-		book.setAuthor(buildAuthor(sc));
-		return book;
-	}
-
-	private static Author buildAuthor(Scanner sc) {
-		Author author = new Author();
-		System.out.println("Enter name of author:");
-		author.setName(sc.next());
-		System.out.println("Enter midleName of author:");
-		author.setMidlenme(sc.next());
-		System.out.println("Enter surName of author:");
-		author.setSurname(sc.next());
-		System.out.println("Enter birthday of author in next format (yyyy/mm/dd)");
-		GregorianCalendar birthday = new GregorianCalendar();
-		while (true) {
-			try {
-
-				Date date = new SimpleDateFormat("yyyy/MM/dd").parse(sc.next());
-				birthday.setTimeInMillis(date.getTime());
-				author.setBirthDate(birthday);
+	private static void menuReport(Scanner sc) {
+		label: while (true) {
+			showBoxReport();
+			switch (sc.next()) {
+			case "0":
+				break label;
+			case "1":
+				ReportDaoImple.debtorsReport();
 				break;
-			} catch (ParseException e) {
-				e.printStackTrace();
-				System.err.println("Inncorect format date, try Enter again");
+			case "2":
+
+				break;
+			case "3":
+
+				break;
+			default:
+				System.out.println("You entered incorrect number, please be attentive repeat Enter");
+				System.out.println("Number must be [0-3]");
 			}
+
 		}
-		return author;
+	}
+
+	private static void showBoxReport() {
+		System.out.println("Menu");
+		System.out.println("[0].Exit");
+		System.out.println("[1].Report on debtors readers ");
+		System.out.println("[2].Read books report");
+		System.out.println("[3].Report on the best readers");
 	}
 
 	private static void exitMenu(Scanner sc) {
@@ -252,18 +222,6 @@ public class Logic {
 		}
 	}
 
-	private static String validationPassword(Scanner sc) {
-		while (true) {
-			String s = sc.next();
-			Pattern p = Pattern.compile("[0-9]");
-			Matcher m = p.matcher(s);
-			if (s.length() > 6 && m.find())
-				return s;
-			System.out.println("The password must contain at least 6 characters and one digit!");
-		}
-
-	}
-
 	private static void sleep(int time) {
 		try {
 			Thread.sleep(time);
@@ -273,6 +231,7 @@ public class Logic {
 	}
 
 	private static int checkIdBoock(Scanner sc) {
+		System.out.println("Enter id book");
 		String s = new String();
 		while (true) {
 			s = sc.next();
@@ -284,7 +243,6 @@ public class Logic {
 				int id = Integer.parseInt(s.trim());
 				return id;
 			}
-
 		}
 	}
 

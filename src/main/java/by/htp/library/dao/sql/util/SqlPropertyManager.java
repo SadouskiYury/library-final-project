@@ -41,19 +41,31 @@ public class SqlPropertyManager {
 		return rb.getString("db.query.take_date.for.reader");
 	}
 
-	public static String getQuertReader() {
+	public static String getQueryReader() {
 		return rb.getString("db.query.add.reader");
 	}
 
-	public static String getQuertAddAuthor() {
+	public static String getQueryAddAuthor() {
 		return rb.getString("db.query.add.author");
 	}
 
-	public static String getQuertAddBook() {
+	public static String getQueryAddBook() {
 		return rb.getString("db.query.add.book");
 	}
 
-	public static String getQuertIssueBook() {
-		return rb.getString("db.quert.issue.book");
+	public static String getQueryIssueBook() {
+		return rb.getString("db.query.issue.book");
+	}
+
+	public static String getQuerycheckBook() {
+		return rb.getString("db.query.issue.book");
+	}
+
+	public static String getQueryReturnBook() {
+		return rb.getString("db.query.return.book");
+	}
+
+	public static String getQueryDeptorsReport() {
+		return rb.getString("db.query.deptors.report");
 	}
 }

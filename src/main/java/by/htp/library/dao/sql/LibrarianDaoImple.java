@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 
 import by.htp.library.dao.AbstractDao;
 import by.htp.library.dao.sql.util.ConnectionDB;
+import by.htp.library.dao.sql.util.EnumNameColumn;
 import by.htp.library.dao.sql.util.SqlPropertyManager;
 import by.htp.library.entity.Author;
 import by.htp.library.entity.Book;
@@ -17,6 +18,13 @@ import by.htp.library.entity.Librarian;
 import by.htp.library.entity.Reader;
 
 public class LibrarianDaoImple extends AbstractDao {
+	private GregorianCalendar takeDate;
+	private GregorianCalendar currentDate;
+	private ResultSet rs;
+	{
+		takeDate = new GregorianCalendar();
+		currentDate = new GregorianCalendar();
+	}
 
 	@Override
 	public Boolean login(String login, String pass) {
@@ -25,28 +33,24 @@ public class LibrarianDaoImple extends AbstractDao {
 
 	@Override
 	public Boolean returnBook(int id_book) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQuertReader())) {
-//			ps.setString(1, r.getName());
-//			ps.setString(2, r.getSurname());
-//			ps.setInt(3, r.getNumberPhone());
-//			ps.setString(4, r.getPassword());
-//			ps.setString(5, r.getNumberLibraryCard());
-//			ps.executeUpdate();
-//			System.out.println("Registartion completed " + r.getName());
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReturnBook())) {
+			ps.setDate(1, new Date(currentDate.getTimeInMillis()));
+			ps.setInt(2, id_book);
+			ps.executeUpdate();
+			System.out.println("Book returned!");
 			return true;
 		} catch (SQLException e) {
-			System.err.println("Impossible add new reader!");
+			System.err.println("Impossible return new book!");
 			return false;
 		}
 	}
 
 	@Override
 	public Boolean issueBook(int id, String NumberLibraryCard) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQuertIssueBook())) {
-			GregorianCalendar today = new GregorianCalendar();
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryIssueBook())) {
 			if (checkReaderForGetBook(NumberLibraryCard, id)) {
 				ps.setInt(1, id);
-				ps.setDate(2, new Date(today.getTimeInMillis()));
+				ps.setDate(2, new Date(currentDate.getTimeInMillis()));
 				ps.setString(3, NumberLibraryCard);
 				ps.executeUpdate();
 				System.out.println("Book issued!");
@@ -62,34 +66,50 @@ public class LibrarianDaoImple extends AbstractDao {
 	private Boolean checkReaderForGetBook(String NumberLibaryCard, int id_book) {
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
 			ps.setString(1, NumberLibaryCard);
-			ResultSet rs = ps.executeQuery();
-			GregorianCalendar takeDate = new GregorianCalendar();
-			GregorianCalendar currentDate = new GregorianCalendar();
+			rs = ps.executeQuery();
 			int count = 0;
 			int countOverdueBook = 0;
 			while (rs.next()) {
-				if (rs.getDate("return_date") == null && rs.getInt("id_book") != id_book) {
-					takeDate.setTime(rs.getDate("take_date"));
+				if (rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
+					takeDate.setTime(rs.getDate(EnumNameColumn.REPORT_TAKE_DATE.getValue()));
 					takeDate.add(Calendar.DAY_OF_MONTH, 30);
 					if (takeDate.after(currentDate)) {
-						System.out.println(
-								"Reader have a book: " + rs.getString("title") + ", which have to return untill  "
-										+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
+						System.out.println("Reader have a book: " + rs.getString(EnumNameColumn.BOOK_TITLE.getValue())
+								+ ", which have to return untill  "
+								+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
 						count++;
 					} else {
-						System.out.println("Reader have overdue a BOOK: " + rs.getString("title")
-								+ ", which have to return untill  "
+						System.out.println("Reader have overdue a BOOK: "
+								+ rs.getString(EnumNameColumn.BOOK_TITLE.getValue()) + ", which have to return untill  "
 								+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
 						countOverdueBook++;
 					}
 				}
 			}
-			if (count > 3 || countOverdueBook > 0)
+			if (count > 3 || countOverdueBook > 0 || !checkBookForUse(id_book)) {
+				System.out.println("You can't take this book in use!");
 				return false;
-			else
+			} else
 				return true;
 		} catch (SQLException e) {
 			System.err.println("You have not read any books");
+			return false;
+		}
+
+	}
+
+	private Boolean checkBookForUse(int id) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
+			while (rs.next()) {
+				if (rs.getInt(EnumNameColumn.BOOK_ID.getValue()) == id
+						&& rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
+					System.out.println("The book in use now!");
+					return false;
+				}
+			}
+			return true;
+		} catch (SQLException e) {
+			System.err.println("Incorect id book");
 			return false;
 		}
 
@@ -112,7 +132,7 @@ public class LibrarianDaoImple extends AbstractDao {
 	}
 
 	private Boolean insertReader(Reader r) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQuertReader())) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReader())) {
 			ps.setString(1, r.getName());
 			ps.setString(2, r.getSurname());
 			ps.setInt(3, r.getNumberPhone());
@@ -128,7 +148,7 @@ public class LibrarianDaoImple extends AbstractDao {
 	}
 
 	private Boolean insertBook(Book b) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQuertAddBook())) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryAddBook())) {
 			if (cheсkAuthor(b.getAuthor())) {
 				System.out.println(b.toString());
 				ps.setString(1, b.getTitle());
@@ -151,7 +171,7 @@ public class LibrarianDaoImple extends AbstractDao {
 	}
 
 	private Boolean cheсkAuthor(Author author) throws SQLException {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQuertAddAuthor())) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryAddAuthor())) {
 			Date birthday = new Date(author.getBirthDate().getTimeInMillis());
 			ps.setString(1, author.getName());
 			ps.setString(2, author.getMidlenme());

@@ -1,5 +1,7 @@
 package by.htp.library.entity;
 
+import java.util.Scanner;
+
 public class Book {
 	private int id_book;
 	private String title;
@@ -18,6 +20,18 @@ public class Book {
 		this.author = author;
 		this.preface = preface;
 		this.type = type;
+	}
+
+	public Book createBook(Scanner sc, Author author) {
+		Book book = new Book();
+		System.out.println("Enter book's tile:");
+		book.setTitle(sc.next());
+		System.out.println("Enter book's type:");
+		book.setType(sc.next());
+		System.out.println("Enter book's preface:");
+		book.setPreface(sc.next() + sc.nextLine());
+		book.setAuthor(author.buildAuthor(sc));
+		return book;
 	}
 
 	public int getId_book() {

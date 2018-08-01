@@ -1,7 +1,10 @@
 package by.htp.library.entity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Scanner;
 
 public class Author {
 	private int id;
@@ -27,6 +30,31 @@ public class Author {
 		this.midlenme = midlenme;
 		this.surname = surname;
 		this.birthDate = birthDate;
+	}
+
+	public Author buildAuthor(Scanner sc) {
+		Author author = new Author();
+		System.out.println("Enter name of author:");
+		author.setName(sc.next());
+		System.out.println("Enter midleName of author:");
+		author.setMidlenme(sc.next());
+		System.out.println("Enter surName of author:");
+		author.setSurname(sc.next());
+		System.out.println("Enter birthday of author in next format (yyyy/mm/dd)");
+		GregorianCalendar birthday = new GregorianCalendar();
+		while (true) {
+			try {
+
+				Date date = new SimpleDateFormat("yyyy/MM/dd").parse(sc.next());
+				birthday.setTimeInMillis(date.getTime());
+				author.setBirthDate(birthday);
+				break;
+			} catch (ParseException e) {
+				e.printStackTrace();
+				System.err.println("Inncorect format date, try Enter again");
+			}
+		}
+		return author;
 	}
 
 	public int getId() {

@@ -43,8 +43,8 @@ public class ReaderDaoImple extends AbstractDao {
 			GregorianCalendar takeDate = new GregorianCalendar();
 			GregorianCalendar currentDate = new GregorianCalendar();
 			while (rs.next()) {
-				if (rs.getDate("return_date") == null) {
-					takeDate.setTime(rs.getDate("take_date"));
+				if (rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
+					takeDate.setTime(rs.getDate(EnumNameColumn.REPORT_TAKE_DATE.getValue()));
 					takeDate.add(Calendar.DAY_OF_MONTH, 30);
 					if (takeDate.after(currentDate))
 						System.out

@@ -19,9 +19,9 @@ public abstract class AbstractDao implements Dao {
 	public abstract Boolean login(String login, String pass);
 
 	@Override
-	public  Boolean checkReader(String login) {
-	throw new UnsupportedOperationException();
-}
+	public Boolean checkReader(String login) {
+		throw new UnsupportedOperationException();
+	}
 
 	@Override
 	public Boolean returnBook(int id_book) {
