@@ -1,11 +1,17 @@
 package by.htp.library.logic;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import by.htp.library.dao.sql.LibrarianDaoImple;
 import by.htp.library.dao.sql.ReaderDaoImple;
+import by.htp.library.entity.Author;
+import by.htp.library.entity.Book;
 import by.htp.library.entity.Librarian;
 import by.htp.library.entity.Reader;
 
@@ -23,19 +29,19 @@ public class Logic {
 		System.out.println("[0].Exit");
 		System.out.println("[1].Reader");
 		System.out.println("[2].Librarian");
-		sleep(1000);
+		sleep(500);
 		label: while (true) {
 			switch (sc.next()) {
 			case "0":
 				break label;
 			case "1":
 				if (menuReader(sc))
-					sleep(1000);
+					sleep(500);
 				showFunctionReader(sc);
 				break label;
 			case "2":
 				menuLibrarian(sc);
-				sleep(1000);
+				sleep(500);
 				showFunctionLibrarian(sc);
 				break label;
 			default:
@@ -55,7 +61,7 @@ public class Logic {
 			if (readerDao.login(login, pass)) {
 				System.out.println("Welcome to Library! " + readerDao.getReader().getName() + " "
 						+ readerDao.getReader().getSurname());
-				readerDao.checkReader(login, pass);
+				readerDao.checkReader(login);
 				return true;
 			} else {
 				System.out.println("You entered incorrect login or password, please be attentive repeat Enter");
@@ -111,18 +117,18 @@ public class Logic {
 				exitMenu(sc);
 				break;
 			case "2":
-				System.out.println("Enter id book");
-				int id = checkIdBoock(sc);
-				sleep(1000);
-				readerDao.showDetailsBook(id);
+				librarianDao.add(createBook(sc));
 				exitMenu(sc);
 				break;
 			case "3":
+				exitMenu(sc);
 				break;
 			case "4":
+				issuedBook(sc);
+				exitMenu(sc);
 				break;
 			case "5":
-				readerDao.showCatalouge(readerDao.buildCatalogue());
+				librarianDao.showCatalouge(librarianDao.buildCatalogue());
 				exitMenu(sc);
 				break;
 
@@ -144,6 +150,17 @@ public class Logic {
 		System.out.println("[5].Show the catalog of books");
 	}
 
+	private static void issuedBook(Scanner sc) {
+		System.out.println("Enter id_book!");
+		while (!sc.hasNextInt()) {
+			System.out.println("Input id_book must be number!. Try again.");
+			sc.next();
+		}
+		int id = sc.nextInt();
+		System.out.println("Enter your numberLibraryCard");
+		librarianDao.issueBook(id, sc.next());
+	}
+
 	private static Boolean menuLibrarian(Scanner sc) {
 		while (true) {
 			System.out.println("Please, Enter your login");
@@ -153,7 +170,6 @@ public class Logic {
 			if (librarianDao.login(login, pass)) {
 				System.out.println(
 						"Welcome to Library! " + Librarian.NAME.getValue() + " " + Librarian.SURNAME.getValue());
-				readerDao.checkReader(login, pass);
 				return true;
 			} else {
 				System.out.println("You entered incorrect login or password, please be attentive repeat Enter");
@@ -184,6 +200,43 @@ public class Logic {
 		System.out.println("Enter numberPhone");
 		reader.setNumberPhone(sc.nextInt());
 		return reader;
+	}
+
+	private static Book createBook(Scanner sc) {
+		Book book = new Book();
+		System.out.println("Enter book's tile:");
+		book.setTitle(sc.next());
+		System.out.println("Enter book's type:");
+		book.setType(sc.next());
+		System.out.println("Enter book's preface:");
+		book.setPreface(sc.next() + sc.nextLine());
+		book.setAuthor(buildAuthor(sc));
+		return book;
+	}
+
+	private static Author buildAuthor(Scanner sc) {
+		Author author = new Author();
+		System.out.println("Enter name of author:");
+		author.setName(sc.next());
+		System.out.println("Enter midleName of author:");
+		author.setMidlenme(sc.next());
+		System.out.println("Enter surName of author:");
+		author.setSurname(sc.next());
+		System.out.println("Enter birthday of author in next format (yyyy/mm/dd)");
+		GregorianCalendar birthday = new GregorianCalendar();
+		while (true) {
+			try {
+
+				Date date = new SimpleDateFormat("yyyy/MM/dd").parse(sc.next());
+				birthday.setTimeInMillis(date.getTime());
+				author.setBirthDate(birthday);
+				break;
+			} catch (ParseException e) {
+				e.printStackTrace();
+				System.err.println("Inncorect format date, try Enter again");
+			}
+		}
+		return author;
 	}
 
 	private static void exitMenu(Scanner sc) {

@@ -44,4 +44,16 @@ public class SqlPropertyManager {
 	public static String getQuertReader() {
 		return rb.getString("db.query.add.reader");
 	}
+
+	public static String getQuertAddAuthor() {
+		return rb.getString("db.query.add.author");
+	}
+
+	public static String getQuertAddBook() {
+		return rb.getString("db.query.add.book");
+	}
+
+	public static String getQuertIssueBook() {
+		return rb.getString("db.quert.issue.book");
+	}
 }

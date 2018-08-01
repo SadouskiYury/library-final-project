@@ -9,6 +9,8 @@ public interface Dao {
 	Boolean login(String login, String pass);
 
 	Boolean add(Object o);
+	
+	Boolean issueBook(int id, String NumberLibraryCard);
 
 	List<Book> buildCatalogue();
 
@@ -16,7 +18,7 @@ public interface Dao {
 
 	Boolean returnBook(int id_book);
 
-	Boolean checkReader(String login, String pass);
+	Boolean checkReader(String login);
 
 	void showDetailsBook(int id_book);
 }

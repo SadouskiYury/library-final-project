@@ -1,5 +1,6 @@
 package by.htp.library.run;
 
+
 import by.htp.library.logic.Logic;
 
 public class MainDB {
@@ -46,8 +47,9 @@ public class MainDB {
 		 * которые прочитали не менее 2-х и не более 8-ми книг за месяц.&&&&
 		 * 
 		 */
+		 
 		Logic.startMenu();
+		
 
 	}
-
 }
