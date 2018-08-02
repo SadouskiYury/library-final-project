@@ -1,7 +1,5 @@
 package by.htp.library.run;
 
-import java.util.Scanner;
-
 import by.htp.library.logic.Logic;
 
 public class MainDB {

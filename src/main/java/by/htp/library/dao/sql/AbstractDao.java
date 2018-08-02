@@ -1,4 +1,4 @@
-package by.htp.library.dao;
+package by.htp.library.dao.sql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import by.htp.library.dao.Dao;
 import by.htp.library.dao.sql.util.ConnectionDB;
 import by.htp.library.dao.sql.util.EnumNameColumn;
 import by.htp.library.dao.sql.util.SqlPropertyManager;
