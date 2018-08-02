@@ -1,8 +1,13 @@
 package by.htp.library.entity;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Book {
+public class Book implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1875718574913951614L;
 	private int id_book;
 	private String title;
 	private Author author;

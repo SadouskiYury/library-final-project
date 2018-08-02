@@ -4,21 +4,14 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import by.htp.library.dao.sql.LibrarianDaoImple;
-import by.htp.library.dao.sql.ReaderDaoImple;
+import by.htp.library.dao.Dao;
 import by.htp.library.entity.Author;
 import by.htp.library.entity.Book;
 import by.htp.library.entity.Reader;
 
 public class Functions {
-	private static ReaderDaoImple readerDao;
-	private static LibrarianDaoImple librarianDao;
-	static {
-		readerDao = new ReaderDaoImple();
-		librarianDao = new LibrarianDaoImple();
-	}
 
-	public static void showFunctionReader(Scanner sc) {
+	public static void showFunctionReader(Scanner sc, Dao readerDao) {
 		label: while (true) {
 			System.out.println("Menu");
 			System.out.println("[0].Exit");
@@ -29,7 +22,7 @@ public class Functions {
 			case "0":
 				break label;
 			case "1":
-				readerDao.showCatalouge(readerDao.buildCatalogue());
+				readerDao.showCatalouge();
 				Menu.exitMenu(sc);
 				break;
 			case "2": {
@@ -46,7 +39,7 @@ public class Functions {
 		}
 	}
 
-	public static void showFunctionLibrarian(Scanner sc) {
+	public static void showFunctionLibrarian(Scanner sc, Dao librarianDao) {
 		label: while (true) {
 			Menu.showBoxLibrarian();
 			switch (sc.next()) {
@@ -68,11 +61,11 @@ public class Functions {
 				Menu.exitMenu(sc);
 				break;
 			case "4":
-				Menu.issuedBook(sc);
+				Menu.issuedBook(sc, librarianDao);
 				Menu.exitMenu(sc);
 				break;
 			case "5":
-				librarianDao.showCatalouge(librarianDao.buildCatalogue());
+				librarianDao.showCatalouge();
 				Menu.exitMenu(sc);
 				break;
 			default:

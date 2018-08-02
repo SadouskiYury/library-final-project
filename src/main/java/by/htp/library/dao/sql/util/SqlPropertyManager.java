@@ -74,7 +74,7 @@ public class SqlPropertyManager {
 	}
 
 	public static String getQueryReportReaders() {
-		return rb.getString("db.query.report.readers");
+		return rb.getString("db.query.report.reader");
 	}
 
 }

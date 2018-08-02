@@ -1,4 +1,4 @@
-package by.htp.library.dao.sql;
+package by.htp.library.dao.sql.report;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,13 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import by.htp.library.dao.ReportDao;
 import by.htp.library.dao.sql.util.ConnectionDB;
 import by.htp.library.dao.sql.util.EnumNameColumn;
 import by.htp.library.dao.sql.util.SqlPropertyManager;
 
-public class ReportDaoImple {
+public class Reports implements ReportDao {
 
-	public static void debtorsReport() {
+	public void debtorsReport() {
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryDeptorsReport())) {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -29,9 +30,9 @@ public class ReportDaoImple {
 					System.out.println(
 							"----------------------------------------------------------------------------------");
 					System.out.printf("%-10s%-15s%-15s%-15s%-10s%n",
-							rs.getString(EnumNameColumn.READER_NAME.getValue()),
-							rs.getString(EnumNameColumn.READER_SURNAME.getValue()),
-							rs.getInt(EnumNameColumn.READER_NUMBER_PHONE.getValue()),
+							rs.getString(EnumNameColumn.READER_NAME.getValue().trim()),
+							rs.getString(EnumNameColumn.READER_SURNAME.getValue().trim()),
+							rs.getInt(EnumNameColumn.READER_NUMBER_PHONE.getValue().trim()),
 							new SimpleDateFormat("yyyy/MM/dd")
 									.format(rs.getDate(EnumNameColumn.REPORT_TAKE_DATE.getValue())),
 							(day / (1000L * 60L * 60L * 24L)));
@@ -45,7 +46,7 @@ public class ReportDaoImple {
 		}
 	}
 
-	public static void reportAboutReadBooks() {
+	public void reportAboutReadBooks() {
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReportBook())) {
 			ResultSet rs = ps.executeQuery();
 			System.out.println("Report about read books");
@@ -64,17 +65,47 @@ public class ReportDaoImple {
 		}
 	}
 
-	public static void reportAboutReder() {
+	// public static void reportAboutReder() {
+	// try (PreparedStatement ps =
+	// ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReportReaders())) {
+	// ResultSet rs = ps.executeQuery();
+	// System.out.println("Report about active readers");
+	// System.out.printf("%-15s%-15s%-15s%-15s%n", "COUNT BOOKS", "Name", "Surname",
+	// "Login");
+	// System.out.println("---------------------------------------------------------------------------------");
+	// while (rs.next()) {
+	// System.out.printf("%-15d%-15s%-15s%-57s%n", rs.getInt("count"),
+	// rs.getString(EnumNameColumn.READER_NAME.getValue()),
+	// rs.getString(EnumNameColumn.READER_SURNAME.getValue()),
+	// rs.getString(EnumNameColumn.READER_LOGIN.getValue()));
+	// }
+	// System.out.println("----------------------------------------------------------------------------------");
+	// } catch (
+	//
+	// SQLException e) {
+	// System.err.println("Incorect query for about reader");
+	//
+	// }
+	// }
+	public void reportAboutReder() {
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReportReaders())) {
 			ResultSet rs = ps.executeQuery();
 			System.out.println("Report about active readers");
 			System.out.printf("%-15s%-15s%-15s%-15s%n", "COUNT BOOKS", "Name", "Surname", "Login");
 			System.out.println("---------------------------------------------------------------------------------");
 			while (rs.next()) {
-				System.out.printf("%-15d%-15s%-15s%-57s%n", rs.getInt("count"),
-						rs.getString(EnumNameColumn.READER_NAME.getValue()),
-						rs.getString(EnumNameColumn.READER_SURNAME.getValue()),
-						rs.getString(EnumNameColumn.READER_LOGIN.getValue()));
+				int count = 0;
+				GregorianCalendar returnDate = new GregorianCalendar();
+				GregorianCalendar currentDate = new GregorianCalendar();
+				returnDate.setTime(rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()));
+				currentDate.add(Calendar.DAY_OF_MONTH, -31);
+				if (currentDate.before(returnDate)) {
+					count++;
+					System.out.printf("%-15d%-15s%-15s%-15s%n", count,
+							rs.getString(EnumNameColumn.READER_NAME.getValue().trim()),
+							rs.getString(EnumNameColumn.READER_SURNAME.getValue().trim()),
+							rs.getString(EnumNameColumn.READER_LOGIN.getValue().trim()));
+				}
 			}
 			System.out.println("----------------------------------------------------------------------------------");
 		} catch (

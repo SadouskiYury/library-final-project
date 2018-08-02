@@ -1,11 +1,12 @@
 package by.htp.library.dao.memory;
 
-import java.util.List;
+import java.util.GregorianCalendar;
 
 import by.htp.library.dao.Dao;
+import by.htp.library.entity.Author;
 import by.htp.library.entity.Book;
 
-public abstract class AbstractDao implements Dao {
+public abstract class AbstractDaoMemory implements Dao {
 
 	@Override
 	public Boolean login(String login, String pass) {
@@ -23,15 +24,6 @@ public abstract class AbstractDao implements Dao {
 	}
 
 	@Override
-	public List<Book> buildCatalogue() {
-		return null;
-	}
-
-	@Override
-	public void showCatalouge(List<Book> list) {
-	}
-
-	@Override
 	public Boolean returnBook(int id_book) {
 		return null;
 	}
@@ -42,7 +34,22 @@ public abstract class AbstractDao implements Dao {
 	}
 
 	@Override
+	public void showCatalouge() {
+	}
+
+	@Override
 	public void showDetailsBook(int id_book) {
+	}
+
+	public Book buildBook() {
+		Book book = new Book();
+		return book;
+	}
+
+	private Author buildAuthor() {
+		Author author = new Author();
+		GregorianCalendar birthday = new GregorianCalendar();
+		return author;
 	}
 
 }

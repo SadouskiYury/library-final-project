@@ -1,6 +1,13 @@
 package by.htp.library.run;
 
-import by.htp.library.logic.Logic;
+import java.util.ArrayList;
+import java.util.List;
+
+import by.htp.library.dao.memory.base.BaseBook;
+import by.htp.library.dao.memory.base.CreatedNewFirstBase;
+import by.htp.library.dao.memory.serializble.Serializable;
+import by.htp.library.entity.Book;
+import by.htp.library.logic.MainMenu;
 
 public class MainDB {
 
@@ -46,8 +53,13 @@ public class MainDB {
 		 * которые прочитали не менее 2-х и не более 8-ми книг за месяц.&&&&
 		 * 
 		 */
-
-		Logic.startMenu();
+		CreatedNewFirstBase.createNewBase();
+		Serializable serial = new Serializable();
+		List<Book> book = new ArrayList<>();
+		BaseBook book1 = new BaseBook();
+		book1 = (BaseBook) serial.readBookBase();
+		System.out.println(book1.toString());
+		// MainMenu.startMenu();
 
 	}
 }

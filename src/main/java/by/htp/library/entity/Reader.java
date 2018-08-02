@@ -1,10 +1,15 @@
 package by.htp.library.entity;
 
+import java.io.Serializable;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Reader {
+public class Reader implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6400599246992638293L;
 	private String name;
 	private String surname;
 	private String numberLibraryCard;

@@ -1,10 +1,5 @@
 package by.htp.library.dao;
 
-import java.util.List;
-
-import by.htp.library.entity.Book;
-import by.htp.library.entity.Reader;
-
 public interface Dao {
 	Boolean login(String login, String pass);
 
@@ -12,13 +7,11 @@ public interface Dao {
 
 	Boolean issueBook(int id, String NumberLibraryCard);
 
-	List<Book> buildCatalogue();
-
-	void showCatalouge(List<Book> list);
-
 	Boolean returnBook(int id_book);
 
 	Boolean checkReader(String login);
+
+	void showCatalouge();
 
 	void showDetailsBook(int id_book);
 

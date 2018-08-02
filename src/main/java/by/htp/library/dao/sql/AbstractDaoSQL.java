@@ -14,38 +14,14 @@ import by.htp.library.dao.sql.util.SqlPropertyManager;
 import by.htp.library.entity.Author;
 import by.htp.library.entity.Book;
 
-public abstract class AbstractDao implements Dao {
+public abstract class AbstractDaoSQL implements Dao {
 
 	@Override
 	public abstract Boolean login(String login, String pass);
 
 	@Override
-	public Boolean checkReader(String login) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Boolean returnBook(int id_book) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Boolean issueBook(int id, String NumberLibraryCard) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Boolean add(Object o) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void showDetailsBook(int id_book) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void showCatalouge(List<Book> list) {
+	public void showCatalouge() {
+		List<Book> list = buildCatalogue();
 		System.out.printf("%-10s%-20s%-35s%n", "Book id", "Title ", "Author ");
 		System.out.println("----------------------------------------------------------------------------------");
 		for (Book l : list)
@@ -53,8 +29,7 @@ public abstract class AbstractDao implements Dao {
 		System.out.println("----------------------------------------------------------------------------------");
 	}
 
-	@Override
-	public List<Book> buildCatalogue() {
+	private List<Book> buildCatalogue() {
 		List<Book> list = new ArrayList<>();
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryBook())) {
 
@@ -62,7 +37,6 @@ public abstract class AbstractDao implements Dao {
 			while (rs.next()) {
 				list.add(buildBook(rs));
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -89,6 +63,32 @@ public abstract class AbstractDao implements Dao {
 		author.setBirthDate(birthday);
 		author.setId(rs.getInt(EnumNameColumn.AUTHOR_ID.getValue()));
 		return author;
+	}
+
+
+	@Override
+	public Boolean add(Object o) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Boolean checkReader(String login) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Boolean returnBook(int id_book) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Boolean issueBook(int id, String NumberLibraryCard) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void showDetailsBook(int id_book) {
+		throw new UnsupportedOperationException();
 	}
 
 }

@@ -15,7 +15,7 @@ import by.htp.library.dao.sql.util.SqlPropertyManager;
 import by.htp.library.entity.Book;
 import by.htp.library.entity.Reader;
 
-public class ReaderDaoImple extends AbstractDao {
+public class ReaderDaoImple extends AbstractDaoSQL {
 	private static Reader reader = new Reader();
 	private static ResultSet rs;
 
@@ -90,17 +90,12 @@ public class ReaderDaoImple extends AbstractDao {
 		}
 	}
 
-	public Reader getReader() {
-		return reader;
-	}
-
 	private void buildReader(ResultSet rs) throws SQLException {
 		reader.setName(rs.getString(EnumNameColumn.READER_NAME.getValue()).trim());
 		reader.setSurname(rs.getString(EnumNameColumn.READER_SURNAME.getValue().trim()));
 		reader.setPassword(rs.getString(EnumNameColumn.READER_PASSWORD.getValue().trim()));
 		reader.setNumberPhone(rs.getInt(EnumNameColumn.READER_NUMBER_PHONE.getValue()));
 		reader.setNumberLibraryCard(rs.getString(EnumNameColumn.READER_LOGIN.getValue()));
-
 	}
 
 }

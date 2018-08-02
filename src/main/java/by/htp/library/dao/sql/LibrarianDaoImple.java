@@ -16,7 +16,7 @@ import by.htp.library.entity.Book;
 import by.htp.library.entity.Librarian;
 import by.htp.library.entity.Reader;
 
-public class LibrarianDaoImple extends AbstractDao {
+public class LibrarianDaoImple extends AbstractDaoSQL {
 	private GregorianCalendar takeDate;
 	private GregorianCalendar currentDate;
 	private ResultSet rs;
@@ -57,7 +57,7 @@ public class LibrarianDaoImple extends AbstractDao {
 			}
 			return false;
 		} catch (SQLException e) {
-			System.err.println("Impossible get this book!");
+			System.err.println("Impossible issue this book!");
 			return false;
 		}
 	}

@@ -2,33 +2,27 @@ package by.htp.library.logic;
 
 import java.util.Scanner;
 
-import by.htp.library.dao.sql.LibrarianDaoImple;
-import by.htp.library.dao.sql.ReaderDaoImple;
-import by.htp.library.dao.sql.ReportDaoImple;
+import by.htp.library.dao.Dao;
+import by.htp.library.dao.ReportDao;
 import by.htp.library.entity.Librarian;
+import by.htp.library.entity.Reader;
 
 public class Menu {
-	private static ReaderDaoImple readerDao;
-	private static LibrarianDaoImple librarianDao;
-	static {
-		readerDao = new ReaderDaoImple();
-		librarianDao = new LibrarianDaoImple();
-	}
 
-	public static void menuReport(Scanner sc) {
+	public static void menuReport(Scanner sc, ReportDao report) {
 		label: while (true) {
 			showBoxReport();
 			switch (sc.next()) {
 			case "0":
 				break label;
 			case "1":
-				ReportDaoImple.debtorsReport();
+				report.debtorsReport();
 				break;
 			case "2":
-				ReportDaoImple.reportAboutReadBooks();
+				report.reportAboutReadBooks();
 				break;
 			case "3":
-				ReportDaoImple.reportAboutReder();
+				report.reportAboutReder();
 				break;
 			default:
 				System.out.println("You entered incorrect number, please be attentive repeat Enter");
@@ -38,15 +32,15 @@ public class Menu {
 		}
 	}
 
-	public static Boolean menuReader(Scanner sc) {
+	public static Boolean menuReader(Scanner sc, Dao readerDao) {
 		while (true) {
 			System.out.println("Please, Enter your login");
 			String login = sc.next();
 			System.out.println("Please, Enter your password");
 			String pass = sc.next();
 			if (readerDao.login(login, pass)) {
-				System.out.println("Welcome to Library! " + readerDao.getReader().getName() + " "
-						+ readerDao.getReader().getSurname());
+				Reader reader = new Reader();
+				System.out.println("Welcome to Library! " + reader.getName() + " " + reader.getSurname());
 				readerDao.checkReader(login);
 				return true;
 			} else {
@@ -56,13 +50,13 @@ public class Menu {
 		}
 	}
 
-	public static Boolean menuLibrarian(Scanner sc) {
+	public static Boolean menuLibrarian(Scanner sc, Dao librarian) {
 		while (true) {
 			System.out.println("Please, Enter your login");
 			String login = sc.next();
 			System.out.println("Please, Enter your password");
 			String pass = sc.next();
-			if (librarianDao.login(login, pass)) {
+			if (librarian.login(login, pass)) {
 				System.out.println(
 						"Welcome to Library! " + Librarian.NAME.getValue() + " " + Librarian.SURNAME.getValue());
 				return true;
@@ -99,7 +93,7 @@ public class Menu {
 		System.out.println("[3].Report on the best readers");
 	}
 
-	public static void issuedBook(Scanner sc) {
+	public static void issuedBook(Scanner sc, Dao librarian) {
 		System.out.println("Enter id_book!");
 		while (!sc.hasNextInt()) {
 			System.out.println("Input id_book must be number!. Try again.");
@@ -107,7 +101,7 @@ public class Menu {
 		}
 		int id = sc.nextInt();
 		System.out.println("Enter your numberLibraryCard");
-		librarianDao.issueBook(id, sc.next());
+		librarian.issueBook(id, sc.next());
 	}
 
 	public static void exitMenu(Scanner sc) {

@@ -1,12 +1,17 @@
 package by.htp.library.entity;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
-public class Author {
+public class Author implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7793382842036044943L;
 	private int id;
 	private String name;
 	private String midlenme;
