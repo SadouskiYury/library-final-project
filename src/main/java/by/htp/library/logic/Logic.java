@@ -188,10 +188,10 @@ public class Logic {
 				ReportDaoImple.debtorsReport();
 				break;
 			case "2":
-
+				ReportDaoImple.reportAboutReadBooks();
 				break;
 			case "3":
-
+				ReportDaoImple.reportAboutReder();
 				break;
 			default:
 				System.out.println("You entered incorrect number, please be attentive repeat Enter");

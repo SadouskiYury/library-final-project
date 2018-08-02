@@ -68,4 +68,13 @@ public class SqlPropertyManager {
 	public static String getQueryDeptorsReport() {
 		return rb.getString("db.query.deptors.report");
 	}
+
+	public static String getQueryReportBook() {
+		return rb.getString("db.query.report.book");
+	}
+
+	public static String getQueryReportReaders() {
+		return rb.getString("db.query.report.readers");
+	}
+
 }

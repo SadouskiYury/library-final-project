@@ -43,6 +43,46 @@ public class ReportDaoImple {
 			System.err.println("Incorect query for deptors reader");
 
 		}
-
 	}
+
+	public static void reportAboutReadBooks() {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReportBook())) {
+			ResultSet rs = ps.executeQuery();
+			System.out.println("Report about read books");
+			System.out.printf("%-10s%-20s%-10s%n", "ID_BOOK", "TITLE", "COUNT");
+			System.out.println("---------------------------------------------------------------------------------");
+			while (rs.next()) {
+				System.out.printf("%-10d%-20s%-10d%n", rs.getInt("id_book"),
+						rs.getString(EnumNameColumn.BOOK_TITLE.getValue()), rs.getInt("count"));
+			}
+			System.out.println("----------------------------------------------------------------------------------");
+		} catch (
+
+		SQLException e) {
+			System.err.println("Incorect query for read books");
+
+		}
+	}
+
+	public static void reportAboutReder() {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReportReaders())) {
+			ResultSet rs = ps.executeQuery();
+			System.out.println("Report about active readers");
+			System.out.printf("%-15s%-15s%-15s%-15s%n", "COUNT BOOKS", "Name", "Surname", "Login");
+			System.out.println("---------------------------------------------------------------------------------");
+			while (rs.next()) {
+				System.out.printf("%-15d%-15s%-15s%-57s%n", rs.getInt("count"),
+						rs.getString(EnumNameColumn.READER_NAME.getValue()),
+						rs.getString(EnumNameColumn.READER_SURNAME.getValue()),
+						rs.getString(EnumNameColumn.READER_LOGIN.getValue()));
+			}
+			System.out.println("----------------------------------------------------------------------------------");
+		} catch (
+
+		SQLException e) {
+			System.err.println("Incorect query for about reader");
+
+		}
+	}
+
 }
