@@ -20,6 +20,9 @@ public abstract class AbstractDaoSQL implements Dao {
 	public abstract Boolean login(String login, String pass);
 
 	@Override
+	public abstract Boolean checkReader(String login);
+
+	@Override
 	public void showCatalouge() {
 		List<Book> list = buildCatalogue();
 		System.out.printf("%-10s%-20s%-35s%n", "Book id", "Title ", "Author ");
@@ -44,12 +47,10 @@ public abstract class AbstractDaoSQL implements Dao {
 	}
 
 	public Book buildBook(ResultSet rs) throws SQLException {
-		Book book = new Book();
-		book.setTitle(rs.getString(EnumNameColumn.BOOK_TITLE.getValue().trim()));
-		book.setId_book(rs.getInt(EnumNameColumn.BOOK_ID.getValue()));
-		book.setAuthor(buildAuthor(rs));
-		book.setType(rs.getString(EnumNameColumn.BOOK_TYPE.getValue()));
-		book.setPreface(rs.getString(EnumNameColumn.BOOK_PREFACE.getValue()));
+		Book book = new Book(rs.getInt(EnumNameColumn.BOOK_ID.getValue()),
+				rs.getString(EnumNameColumn.BOOK_TITLE.getValue().trim()), buildAuthor(rs),
+				rs.getString(EnumNameColumn.BOOK_PREFACE.getValue()),
+				rs.getString(EnumNameColumn.BOOK_TYPE.getValue()));
 		return book;
 	}
 
@@ -65,14 +66,8 @@ public abstract class AbstractDaoSQL implements Dao {
 		return author;
 	}
 
-
 	@Override
 	public Boolean add(Object o) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Boolean checkReader(String login) {
 		throw new UnsupportedOperationException();
 	}
 

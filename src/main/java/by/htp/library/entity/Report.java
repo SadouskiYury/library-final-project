@@ -1,6 +1,7 @@
 package by.htp.library.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 public class Report implements Serializable {
@@ -12,18 +13,18 @@ public class Report implements Serializable {
 	private Book book;
 	private Reader reader;
 	private GregorianCalendar take_date;
-	private Boolean in_use;
+	private GregorianCalendar date_return;
 
 	public Report() {
 		super();
 
 	}
 
-	public Report(Book book, Reader reader, GregorianCalendar take_date, Boolean in_use) {
+	public Report(Book book, Reader reader, GregorianCalendar take_date) {
 		this.book = book;
 		this.reader = reader;
 		this.take_date = take_date;
-		this.in_use = in_use;
+		this.date_return = null;
 	}
 
 	public Book getBook() {
@@ -50,12 +51,12 @@ public class Report implements Serializable {
 		this.take_date = take_date;
 	}
 
-	public Boolean getIn_use() {
-		return in_use;
+	public GregorianCalendar getDate_return() {
+		return date_return;
 	}
 
-	public void setIn_use(Boolean in_use) {
-		this.in_use = in_use;
+	public void setDate_return(GregorianCalendar date_return) {
+		this.date_return = date_return;
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class Report implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((book == null) ? 0 : book.hashCode());
-		result = prime * result + ((in_use == null) ? 0 : in_use.hashCode());
+		result = prime * result + ((date_return == null) ? 0 : date_return.hashCode());
 		result = prime * result + ((reader == null) ? 0 : reader.hashCode());
 		result = prime * result + ((take_date == null) ? 0 : take_date.hashCode());
 		return result;
@@ -83,10 +84,10 @@ public class Report implements Serializable {
 				return false;
 		} else if (!book.equals(other.book))
 			return false;
-		if (in_use == null) {
-			if (other.in_use != null)
+		if (date_return == null) {
+			if (other.date_return != null)
 				return false;
-		} else if (!in_use.equals(other.in_use))
+		} else if (!date_return.equals(other.date_return))
 			return false;
 		if (reader == null) {
 			if (other.reader != null)
@@ -103,7 +104,8 @@ public class Report implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Report [book=" + book + ", reader=" + reader + ", take_date=" + take_date + ", in_use=" + in_use + "]";
+		return "Report [book=" + book + ", reader=" + reader + ", take_date="
+				+ new SimpleDateFormat("yyyy-MM-dd").format(take_date.getTime()) + ", date_return=" + date_return + "]";
 	}
 
 }

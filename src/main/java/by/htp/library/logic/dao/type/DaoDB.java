@@ -1,4 +1,4 @@
-package by.htp.library.logic;
+package by.htp.library.logic.dao.type;
 
 import by.htp.library.dao.Dao;
 import by.htp.library.dao.ReportDao;

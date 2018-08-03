@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.htp.library.dao.memory.base.BaseBook;
+import by.htp.library.dao.memory.base.BaseReader;
+import by.htp.library.dao.memory.base.BaseReport;
 import by.htp.library.dao.memory.base.CreatedNewFirstBase;
 import by.htp.library.dao.memory.serializble.Serializable;
 import by.htp.library.entity.Book;
+import by.htp.library.entity.Report;
 import by.htp.library.logic.MainMenu;
 
-public class MainDB {
+public class Main {
 
 	public static void main(String[] args) {
 		/*
@@ -53,13 +56,20 @@ public class MainDB {
 		 * которые прочитали не менее 2-х и не более 8-ми книг за месяц.&&&&
 		 * 
 		 */
-		CreatedNewFirstBase.createNewBase();
+//		CreatedNewFirstBase.createNewBase();
 		Serializable serial = new Serializable();
-		List<Book> book = new ArrayList<>();
+		BaseReader reader= (BaseReader)serial.readReaderBase();
 		BaseBook book1 = new BaseBook();
+		BaseReport rerport=(BaseReport)serial.readReportBase();
 		book1 = (BaseBook) serial.readBookBase();
+		System.out.println(reader.toString());
 		System.out.println(book1.toString());
-		// MainMenu.startMenu();
+		List<Report> list=rerport.getReports();
+		for(Report r:list)
+		System.out.println(r.toString());
+		
+		
+		 MainMenu.startMenu();
 
 	}
 }

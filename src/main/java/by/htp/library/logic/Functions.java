@@ -52,8 +52,7 @@ public class Functions {
 				break;
 			case "2":
 				Author author = new Author();
-				Book book = new Book();
-				librarianDao.add(book.createBook(sc, author));
+				librarianDao.add(createBook(sc, author));
 				Menu.exitMenu(sc);
 				break;
 			case "3":
@@ -89,6 +88,18 @@ public class Functions {
 				return id;
 			}
 		}
+	}
+	
+	private static Book createBook(Scanner sc, Author author) {
+		Book book = new Book();
+		System.out.println("Enter book's tile:");
+		book.setTitle(sc.next());
+		System.out.println("Enter book's type:");
+		book.setType(sc.next());
+		System.out.println("Enter book's preface:");
+		book.setPreface(sc.next() + sc.nextLine());
+		book.setAuthor(author.buildAuthor(sc));
+		return book;
 	}
 
 	public static void sleep(int time) {

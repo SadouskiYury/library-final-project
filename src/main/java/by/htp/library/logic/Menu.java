@@ -5,7 +5,6 @@ import java.util.Scanner;
 import by.htp.library.dao.Dao;
 import by.htp.library.dao.ReportDao;
 import by.htp.library.entity.Librarian;
-import by.htp.library.entity.Reader;
 
 public class Menu {
 
@@ -39,9 +38,8 @@ public class Menu {
 			System.out.println("Please, Enter your password");
 			String pass = sc.next();
 			if (readerDao.login(login, pass)) {
-				Reader reader = new Reader();
-				System.out.println("Welcome to Library! " + reader.getName() + " " + reader.getSurname());
-				readerDao.checkReader(login);
+				System.out.println("Welcome to Library!");
+				System.out.println(readerDao.checkReader(login));
 				return true;
 			} else {
 				System.out.println("You entered incorrect login or password, please be attentive repeat Enter");

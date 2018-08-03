@@ -3,12 +3,13 @@ package by.htp.library.entity;
 import java.io.Serializable;
 import java.util.Scanner;
 
-public class Book implements Serializable{
+public class Book implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1875718574913951614L;
-	private int id_book;
+	private final int id_book;
+	private static int count;
 	private String title;
 	private Author author;
 	private String preface;
@@ -16,6 +17,7 @@ public class Book implements Serializable{
 
 	public Book() {
 		super();
+		this.id_book = ++count;
 
 	}
 
@@ -25,26 +27,20 @@ public class Book implements Serializable{
 		this.author = author;
 		this.preface = preface;
 		this.type = type;
+
 	}
 
-	public Book createBook(Scanner sc, Author author) {
-		Book book = new Book();
-		System.out.println("Enter book's tile:");
-		book.setTitle(sc.next());
-		System.out.println("Enter book's type:");
-		book.setType(sc.next());
-		System.out.println("Enter book's preface:");
-		book.setPreface(sc.next() + sc.nextLine());
-		book.setAuthor(author.buildAuthor(sc));
-		return book;
+	public Book(String title, Author author, String preface, String type) {
+		this.id_book = ++count;
+		this.title = title;
+		this.author = author;
+		this.preface = preface;
+		this.type = type;
+
 	}
 
 	public int getId_book() {
 		return id_book;
-	}
-
-	public void setId_book(int id_book) {
-		this.id_book = id_book;
 	}
 
 	public String getTitle() {
@@ -61,6 +57,14 @@ public class Book implements Serializable{
 
 	public void setAuthor(Author author) {
 		this.author = author;
+	}
+
+	public static int getCount() {
+		return count;
+	}
+
+	public static void setCount(int count) {
+		Book.count = count;
 	}
 
 	public String getPreface() {

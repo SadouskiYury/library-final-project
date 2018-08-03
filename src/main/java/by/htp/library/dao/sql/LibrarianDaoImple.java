@@ -20,6 +20,7 @@ public class LibrarianDaoImple extends AbstractDaoSQL {
 	private GregorianCalendar takeDate;
 	private GregorianCalendar currentDate;
 	private ResultSet rs;
+	private int count;
 	{
 		takeDate = new GregorianCalendar();
 		currentDate = new GregorianCalendar();
@@ -62,58 +63,6 @@ public class LibrarianDaoImple extends AbstractDaoSQL {
 		}
 	}
 
-	private Boolean checkReaderForGetBook(String NumberLibaryCard, int id_book) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
-			ps.setString(1, NumberLibaryCard);
-			rs = ps.executeQuery();
-			int count = 0;
-			int countOverdueBook = 0;
-			while (rs.next()) {
-				if (rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
-					takeDate.setTime(rs.getDate(EnumNameColumn.REPORT_TAKE_DATE.getValue()));
-					takeDate.add(Calendar.DAY_OF_MONTH, 30);
-					if (takeDate.after(currentDate)) {
-						System.out.println("Reader have a book: " + rs.getString(EnumNameColumn.BOOK_TITLE.getValue())
-								+ ", which have to return untill  "
-								+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
-						count++;
-					} else {
-						System.out.println("Reader have overdue a BOOK: "
-								+ rs.getString(EnumNameColumn.BOOK_TITLE.getValue()) + ", which have to return untill  "
-								+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
-						countOverdueBook++;
-					}
-				}
-			}
-			if (count > 3 || countOverdueBook > 0 || !checkBookForUse(id_book)) {
-				System.out.println("You can't take this book in use!");
-				return false;
-			} else
-				return true;
-		} catch (SQLException e) {
-			System.err.println("You have not read any books");
-			return false;
-		}
-
-	}
-
-	private Boolean checkBookForUse(int id) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
-			while (rs.next()) {
-				if (rs.getInt(EnumNameColumn.BOOK_ID.getValue()) == id
-						&& rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
-					System.out.println("The book in use now!");
-					return false;
-				}
-			}
-			return true;
-		} catch (SQLException e) {
-			System.err.println("Incorect id book");
-			return false;
-		}
-
-	}
-
 	@Override
 	public Boolean add(Object o) {
 		Reader reader = new Reader();
@@ -128,6 +77,72 @@ public class LibrarianDaoImple extends AbstractDaoSQL {
 			return insertBook(book);
 		}
 		return false;
+	}
+
+	@Override
+	public Boolean checkReader(String login) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
+			ps.setString(1, login);
+			rs = ps.executeQuery();
+			takeDate = new GregorianCalendar();
+			count = 0;
+			while (rs.next()) {
+				if (rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
+					takeDate.setTime(rs.getDate(EnumNameColumn.REPORT_TAKE_DATE.getValue()));
+					takeDate.add(Calendar.DAY_OF_MONTH, 30);
+					if (takeDate.after(currentDate)) {
+						System.out
+								.println("You have a book: " + rs.getString("title") + ", which have to return untill  "
+										+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
+						count++;
+					} else {
+						System.out.println(
+								"You have overdue a BOOK: " + rs.getString("title") + ", which have to return untill  "
+										+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
+						return false;
+					}
+				}
+			}
+			return true;
+		} catch (SQLException e) {
+			System.err.println("You have not read any books");
+			return false;
+		}
+
+	}
+
+	private Boolean checkReaderForGetBook(String NumberLibaryCard, int id_book) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
+			ps.setString(1, NumberLibaryCard);
+			rs = ps.executeQuery();
+			if (checkReader(NumberLibaryCard) && count < 3 && checkBookForUse(id_book)) {
+				return true;
+			} else {
+				System.out.println("You can't take this book in use!");
+				return false;
+			}
+		} catch (SQLException e) {
+			System.err.println("You have not read any books");
+			return false;
+		}
+
+	}
+
+	private Boolean checkBookForUse(int id) {
+		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQuerycheckBook())) {
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				if (rs.getInt("id_book") == id && rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
+					System.out.println("The book in use now!");
+					return false;
+				}
+			}
+			return true;
+		} catch (SQLException e) {
+			System.err.println("Incorect id book");
+			return false;
+		}
+
 	}
 
 	private Boolean insertReader(Reader r) {
@@ -187,4 +202,5 @@ public class LibrarianDaoImple extends AbstractDaoSQL {
 			return false;
 		}
 	}
+
 }

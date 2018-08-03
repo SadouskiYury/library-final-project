@@ -16,8 +16,9 @@ import by.htp.library.entity.Book;
 import by.htp.library.entity.Reader;
 
 public class ReaderDaoImple extends AbstractDaoSQL {
-	private static Reader reader = new Reader();
-	private static ResultSet rs;
+	private Reader reader = new Reader();
+	private GregorianCalendar currentDate = new GregorianCalendar();
+	private ResultSet rs;
 
 	@Override
 	public Boolean login(String login, String pass) {
@@ -41,23 +42,24 @@ public class ReaderDaoImple extends AbstractDaoSQL {
 			ps.setString(1, login);
 			rs = ps.executeQuery();
 			GregorianCalendar takeDate = new GregorianCalendar();
-			GregorianCalendar currentDate = new GregorianCalendar();
 			while (rs.next()) {
 				if (rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
 					takeDate.setTime(rs.getDate(EnumNameColumn.REPORT_TAKE_DATE.getValue()));
 					takeDate.add(Calendar.DAY_OF_MONTH, 30);
-					if (takeDate.after(currentDate))
+					if (takeDate.after(currentDate)) {
 						System.out
 								.println("You have a book: " + rs.getString("title") + ", which have to return untill  "
 										+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
-					else
+						return true;
+					} else {
 						System.out.println(
 								"You have overdue a BOOK: " + rs.getString("title") + ", which have to return untill  "
 										+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
-
+						return false;
+					}
 				}
 			}
-			return true;
+			return false;
 		} catch (SQLException e) {
 			System.err.println("You have not read any books");
 			return false;
@@ -68,7 +70,7 @@ public class ReaderDaoImple extends AbstractDaoSQL {
 		Book book = new Book();
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getDetailBook())) {
 			ps.setInt(1, id_book);
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			rs.next();
 			book = buildBook(rs);
 			System.out.println(

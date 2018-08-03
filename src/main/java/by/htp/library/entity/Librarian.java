@@ -2,7 +2,7 @@ package by.htp.library.entity;
 
 public enum Librarian {
 
-	NAME("Marina"), SURNAME("Petrovna"), LOGIN("librarian"), PASSWORD("abc12345");
+	NAME("Marina"), SURNAME("Petrovna"), LOGIN("1"), PASSWORD("1");
 	private String value;
 
 	private Librarian(String value) {

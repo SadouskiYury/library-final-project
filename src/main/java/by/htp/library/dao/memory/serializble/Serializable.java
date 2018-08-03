@@ -88,7 +88,6 @@ public class Serializable {
 	}
 
 	public void writetBookBase(BaseBook base) {
-
 		try {
 			ous = new ObjectOutputStream(new FileOutputStream(createNewFile("Serializable/BaseBook.txt")));
 			ous.writeObject(base);
@@ -108,7 +107,6 @@ public class Serializable {
 	}
 
 	public void writeReportBase(BaseReport base) {
-
 		try {
 			ous = new ObjectOutputStream(new FileOutputStream(createNewFile("Serializable/BaseReport.txt")));
 			ous.writeObject(base);

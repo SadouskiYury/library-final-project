@@ -1,118 +1,80 @@
 package by.htp.library.dao.memory;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import by.htp.library.dao.sql.util.ConnectionDB;
-import by.htp.library.dao.sql.util.EnumNameColumn;
-import by.htp.library.dao.sql.util.SqlPropertyManager;
-import by.htp.library.entity.Author;
+import by.htp.library.dao.memory.base.BaseBook;
+import by.htp.library.dao.memory.base.BaseReader;
+import by.htp.library.dao.memory.base.BaseReport;
+import by.htp.library.dao.memory.serializble.Serializable;
 import by.htp.library.entity.Book;
 import by.htp.library.entity.Librarian;
 import by.htp.library.entity.Reader;
+import by.htp.library.entity.Report;
 
-public class LibrarianDaoImple extends AbstractDaoMemory{
+public class LibrarianDaoImple extends AbstractDaoMemory {
 
-	private GregorianCalendar takeDate;
 	private GregorianCalendar currentDate;
-	private ResultSet rs;
+	private Serializable serial;
+	private List<Reader> reader;
+	private List<Book> book;
+	private List<Report> report;
 	{
-		takeDate = new GregorianCalendar();
 		currentDate = new GregorianCalendar();
+		serial = new Serializable();
+		reader = serial.readReaderBase().getReader();
+		book = serial.readBookBase().getCatalog();
+		setIdCountBook();
+		report = serial.readReportBase().getReports();
 	}
 
 	@Override
 	public Boolean login(String login, String pass) {
 		return Librarian.LOGIN.getValue().equals(login) && Librarian.PASSWORD.getValue().equals(pass);
+
 	}
 
 	@Override
 	public Boolean returnBook(int id_book) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReturnBook())) {
-			ps.setDate(1, new Date(currentDate.getTimeInMillis()));
-			ps.setInt(2, id_book);
-			ps.executeUpdate();
-			System.out.println("Book returned!");
-			return true;
-		} catch (SQLException e) {
-			System.err.println("Impossible return new book!");
-			return false;
+		for (Report list : report) {
+			if (list.getBook().getId_book() == id_book) {
+				list.setDate_return(currentDate);
+				System.out.println("Book returned!");
+			}
 		}
+		BaseReport base = new BaseReport(report);
+		serial.writeReportBase(base);
+		System.out.println("Base update");
+		return true;
 	}
 
 	@Override
 	public Boolean issueBook(int id, String NumberLibraryCard) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryIssueBook())) {
-			if (checkReaderForGetBook(NumberLibraryCard, id)) {
-				ps.setInt(1, id);
-				ps.setDate(2, new Date(currentDate.getTimeInMillis()));
-				ps.setString(3, NumberLibraryCard);
-				ps.executeUpdate();
-				System.out.println("Book issued!");
-				return true;
-			}
-			return false;
-		} catch (SQLException e) {
-			System.err.println("Impossible issue this book!");
-			return false;
-		}
-	}
-
-	private Boolean checkReaderForGetBook(String NumberLibaryCard, int id_book) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
-			ps.setString(1, NumberLibaryCard);
-			rs = ps.executeQuery();
-			int count = 0;
-			int countOverdueBook = 0;
-			while (rs.next()) {
-				if (rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
-					takeDate.setTime(rs.getDate(EnumNameColumn.REPORT_TAKE_DATE.getValue()));
-					takeDate.add(Calendar.DAY_OF_MONTH, 30);
-					if (takeDate.after(currentDate)) {
-						System.out.println("Reader have a book: " + rs.getString(EnumNameColumn.BOOK_TITLE.getValue())
-								+ ", which have to return untill  "
-								+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
-						count++;
-					} else {
-						System.out.println("Reader have overdue a BOOK: "
-								+ rs.getString(EnumNameColumn.BOOK_TITLE.getValue()) + ", which have to return untill  "
-								+ new SimpleDateFormat("yyyy/MM/dd").format(takeDate.getTime()));
-						countOverdueBook++;
+		for (Reader r : reader) {
+			if (r.getNumberLibraryCard().equals(NumberLibraryCard) && checkReader(NumberLibraryCard)) {
+				Reader reader = r;
+				for (Report rep : report) {
+					if (AbstractDaoMemory.getCount() < 3) {
+						if (rep.getDate_return() == null) {
+							System.out.println("Sorry,The book in use!");
+							return false;
+						} else {
+							Report reportNew = new Report();
+							reportNew.setReader(reader);
+							reportNew.setBook(gotBook(id));
+							reportNew.setTake_date(currentDate);
+							report.add(reportNew);
+							System.out.println("Book issue");
+							BaseReport base = new BaseReport(report);
+							serial.writeReportBase(base);
+							System.out.println("Base update");
+							return true;
+						}
 					}
 				}
 			}
-			if (count > 3 || countOverdueBook > 0 || !checkBookForUse(id_book)) {
-				System.out.println("You can't take this book in use!");
-				return false;
-			} else
-				return true;
-		} catch (SQLException e) {
-			System.err.println("You have not read any books");
-			return false;
 		}
-
-	}
-
-	private Boolean checkBookForUse(int id) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryGotBook())) {
-			while (rs.next()) {
-				if (rs.getInt(EnumNameColumn.BOOK_ID.getValue()) == id
-						&& rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()) == null) {
-					System.out.println("The book in use now!");
-					return false;
-				}
-			}
-			return true;
-		} catch (SQLException e) {
-			System.err.println("Incorect id book");
-			return false;
-		}
-
+		return false;
 	}
 
 	@Override
@@ -123,72 +85,48 @@ public class LibrarianDaoImple extends AbstractDaoMemory{
 			return false;
 		else if (o.getClass().equals(reader.getClass())) {
 			reader = (Reader) o;
-			return insertReader(reader);
+			insertReader(reader);
+			return true;
 		} else if (o.getClass().equals(book.getClass())) {
 			book = (Book) o;
-			return insertBook(book);
+			insertBook(book);
 		}
 		return false;
 	}
 
-	private Boolean insertReader(Reader r) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReader())) {
-			ps.setString(1, r.getName());
-			ps.setString(2, r.getSurname());
-			ps.setInt(3, r.getNumberPhone());
-			ps.setString(4, r.getPassword());
-			ps.setString(5, r.getNumberLibraryCard());
-			ps.executeUpdate();
-			System.out.println("Registartion completed " + r.getName());
-			return true;
-		} catch (SQLException e) {
-			System.err.println("Impossible add new reader!");
-			return false;
-		}
+	private void insertReader(Reader r) {
+		reader.add(r);
+		System.out.println("Registartion completed " + r.getName());
+		BaseReader base = new BaseReader(reader);
+		serial.writeReaderBase(base);
+		System.out.println("Base update");
 	}
 
-	private Boolean insertBook(Book b) {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryAddBook())) {
-			if (cheсkAuthor(b.getAuthor())) {
-				System.out.println(b.toString());
-				ps.setString(1, b.getTitle());
-				ps.setString(2, b.getPreface());
-				ps.setString(3, b.getType());
-				ps.setString(4, b.getAuthor().getName());
-				ps.setString(5, b.getAuthor().getMidlenme());
-				ps.setString(6, b.getAuthor().getSurname());
-				Date birthday = new Date(b.getAuthor().getBirthDate().getTimeInMillis());
-				ps.setDate(7, birthday);
-				ps.executeUpdate();
-				System.out.println("Created the book completed succesful!");
-				return true;
-			} else
-				return false;
-		} catch (SQLException e) {
-			System.err.println("Impossible add new book!");
-			return false;
-		}
+	private void insertBook(Book b) {
+		book.add(b);
+		System.out.println("Created the book completed succesful!");
+		BaseBook base = new BaseBook(book);
+		serial.writetBookBase(base);
+		System.out.println("Base update");
+
 	}
 
-	private Boolean cheсkAuthor(Author author) throws SQLException {
-		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryAddAuthor())) {
-			Date birthday = new Date(author.getBirthDate().getTimeInMillis());
-			ps.setString(1, author.getName());
-			ps.setString(2, author.getMidlenme());
-			ps.setString(3, author.getSurname());
-			ps.setDate(4, birthday);
-			ps.setString(5, author.getName());
-			ps.setString(6, author.getMidlenme());
-			ps.setString(7, author.getSurname());
-			ps.setDate(8, birthday);
-			ps.executeUpdate();
-			return true;
-		} catch (SQLException e) {
-			System.err.println("Impossible add new author!");
-			return false;
+	private Book gotBook(int id_book) {
+		for (Book b : book) {
+			if (b.getId_book() == id_book)
+				return b;
+		}
+		return null;
+	}
+
+	private void setIdCountBook() {
+		if (!book.isEmpty()) {
+			int i = 0;
+			for (Book b : book) {
+				if (b.getId_book() > i)
+					i = b.getId_book();
+			}
+			Book.setCount(i);
 		}
 	}
 }
-
-
-

@@ -1,9 +1,8 @@
 package by.htp.library.dao.memory.base;
 
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedList;
+import java.util.List;
 import by.htp.library.entity.Report;
 
 public class BaseReport implements Serializable {
@@ -12,22 +11,13 @@ public class BaseReport implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 6110077187668104669L;
-	private Set<Report> reports = new TreeSet<Report>(new Comparator<Report>() {
-
-		@Override
-		public int compare(Report o1, Report o2) {
-			int result = o1.getTake_date().compareTo(o2.getTake_date());
-			if (result == 0)
-				return o1.getBook().getTitle().compareToIgnoreCase(o2.getBook().getTitle());
-			return result;
-		}
-	});
+	private List<Report> reports = new LinkedList<Report>();
 
 	public BaseReport() {
 		super();
 	}
 
-	public BaseReport(Set<Report> reports) {
+	public BaseReport(List<Report> reports) {
 		this.reports = reports;
 	}
 
@@ -59,6 +49,14 @@ public class BaseReport implements Serializable {
 	@Override
 	public String toString() {
 		return "BaseReport [reports=" + reports + "]";
+	}
+
+	public List<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(List<Report> reports) {
+		this.reports = reports;
 	}
 
 }

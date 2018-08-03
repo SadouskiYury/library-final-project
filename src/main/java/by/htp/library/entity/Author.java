@@ -150,7 +150,7 @@ public class Author implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Author [id=" + id + ", name=" + name + ", midlenme=" + midlenme + ", surname=" + surname
+		return "Author [name=" + name + ", midlenme=" + midlenme + ", surname=" + surname
 				+ ", birthDate=" + new SimpleDateFormat("yyyy-MM-dd").format(birthDate.getTime()) + "]";
 	}
 

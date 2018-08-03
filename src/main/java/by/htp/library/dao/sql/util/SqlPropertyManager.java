@@ -58,7 +58,7 @@ public class SqlPropertyManager {
 	}
 
 	public static String getQuerycheckBook() {
-		return rb.getString("db.query.issue.book");
+		return rb.getString("db.query.check.book");
 	}
 
 	public static String getQueryReturnBook() {

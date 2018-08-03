@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 import by.htp.library.dao.Dao;
 import by.htp.library.dao.ReportDao;
+import by.htp.library.logic.dao.type.DaoDB;
+import by.htp.library.logic.dao.type.DaoMemory;
 
 public class MainMenu {
 	private static Dao readerDao;
