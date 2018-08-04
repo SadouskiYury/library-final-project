@@ -1,5 +1,6 @@
 package by.htp.library.dao.sql.report;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,47 +66,20 @@ public class Reports implements ReportDao {
 		}
 	}
 
-	// public static void reportAboutReder() {
-	// try (PreparedStatement ps =
-	// ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReportReaders())) {
-	// ResultSet rs = ps.executeQuery();
-	// System.out.println("Report about active readers");
-	// System.out.printf("%-15s%-15s%-15s%-15s%n", "COUNT BOOKS", "Name", "Surname",
-	// "Login");
-	// System.out.println("---------------------------------------------------------------------------------");
-	// while (rs.next()) {
-	// System.out.printf("%-15d%-15s%-15s%-57s%n", rs.getInt("count"),
-	// rs.getString(EnumNameColumn.READER_NAME.getValue()),
-	// rs.getString(EnumNameColumn.READER_SURNAME.getValue()),
-	// rs.getString(EnumNameColumn.READER_LOGIN.getValue()));
-	// }
-	// System.out.println("----------------------------------------------------------------------------------");
-	// } catch (
-	//
-	// SQLException e) {
-	// System.err.println("Incorect query for about reader");
-	//
-	// }
-	// }
 	public void reportAboutReder() {
 		try (PreparedStatement ps = ConnectionDB.conectionWithDB(SqlPropertyManager.getQueryReportReaders())) {
+			GregorianCalendar currentDate = new GregorianCalendar();
+			currentDate.add(Calendar.DAY_OF_MONTH, -30);
+			ps.setDate(1, new Date(currentDate.getTimeInMillis()));
 			ResultSet rs = ps.executeQuery();
 			System.out.println("Report about active readers");
 			System.out.printf("%-15s%-15s%-15s%-15s%n", "COUNT BOOKS", "Name", "Surname", "Login");
 			System.out.println("---------------------------------------------------------------------------------");
 			while (rs.next()) {
-				int count = 0;
-				GregorianCalendar returnDate = new GregorianCalendar();
-				GregorianCalendar currentDate = new GregorianCalendar();
-				returnDate.setTime(rs.getDate(EnumNameColumn.REPORT_RETURN_DATE.getValue()));
-				currentDate.add(Calendar.DAY_OF_MONTH, -31);
-				if (currentDate.before(returnDate)) {
-					count++;
-					System.out.printf("%-15d%-15s%-15s%-15s%n", count,
-							rs.getString(EnumNameColumn.READER_NAME.getValue().trim()),
-							rs.getString(EnumNameColumn.READER_SURNAME.getValue().trim()),
-							rs.getString(EnumNameColumn.READER_LOGIN.getValue().trim()));
-				}
+				System.out.printf("%-15d%-15s%-15s%-57s%n", rs.getInt("count"),
+						rs.getString(EnumNameColumn.READER_NAME.getValue()),
+						rs.getString(EnumNameColumn.READER_SURNAME.getValue()),
+						rs.getString(EnumNameColumn.READER_LOGIN.getValue()));
 			}
 			System.out.println("----------------------------------------------------------------------------------");
 		} catch (
@@ -115,5 +89,4 @@ public class Reports implements ReportDao {
 
 		}
 	}
-
 }

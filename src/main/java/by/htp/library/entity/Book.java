@@ -1,7 +1,6 @@
 package by.htp.library.entity;
 
 import java.io.Serializable;
-import java.util.Scanner;
 
 public class Book implements Serializable {
 	/**
